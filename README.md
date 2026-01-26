@@ -14,9 +14,9 @@
 - ✅ **맞춤형 솔루션 처방** (비즈니스/HR/정부 지원사업 매칭)
 - ✅ 고용 이슈 동적 분석 (설문 9번 기반)
 - ✅ 시각화 차트 (4분면 매트릭스)
-- ✅ 관리자 대시보드 (고객 DB 조회, 통계)
+- ✅ **이메일 자동 발송** (Resend API - 리포트 링크 포함)
+- ✅ 관리자 대시보드 (고객 DB 조회, 통계, 이메일 재발송)
 - ✅ 리포트 인쇄 기능 (PDF 저장)
-- ⏳ 이메일 자동 발송 (추후 API 키 설정 필요)
 
 ## 🌐 URL
 
@@ -209,6 +209,7 @@ if (employment_status_4 >= 4) {
 - **프레임워크**: Hono (v4.11.5)
 - **런타임**: Cloudflare Workers
 - **데이터베이스**: Cloudflare D1 (SQLite)
+- **이메일**: Resend API
 - **API**: RESTful API
 
 ### 프론트엔드
@@ -229,17 +230,20 @@ if (employment_status_4 >= 4) {
 ```
 webapp/
 ├── src/
-│   └── index.tsx              # Hono 백엔드 (API + 페이지 라우트)
+│   ├── index.tsx              # Hono 백엔드 (API + 페이지 라우트)
+│   └── email-template.ts      # 이메일 템플릿 (HTML/Text)
 ├── public/static/
 │   ├── survey.js              # 설문조사 폼 로직
 │   ├── report.js              # G-DAX 진단 리포트 로직 (4분면 차트)
-│   └── admin.js               # 관리자 대시보드 로직
+│   └── admin.js               # 관리자 대시보드 로직 (이메일 재발송)
 ├── migrations/
 │   └── 0001_initial_schema.sql # D1 데이터베이스 스키마
 ├── dist/                      # 빌드 결과물
+├── .dev.vars                  # 로컬 환경 변수 (gitignore)
 ├── wrangler.jsonc             # Cloudflare 설정
 ├── ecosystem.config.cjs       # PM2 설정
 ├── package.json               # 의존성 및 스크립트
+├── EMAIL_SETUP.md             # 이메일 설정 가이드
 └── seed.sql                   # 테스트 데이터
 ```
 
@@ -257,13 +261,19 @@ npm run db:migrate:local
 # 3. (선택) 테스트 데이터 삽입
 npm run db:seed
 
-# 4. 빌드
+# 4. 이메일 발송 기능 설정 (선택)
+# .dev.vars 파일 수정
+# RESEND_API_KEY=re_your_api_key_here
+# BASE_URL=http://localhost:3000
+# 자세한 내용은 EMAIL_SETUP.md 참고
+
+# 5. 빌드
 npm run build
 
-# 5. 개발 서버 시작 (PM2)
+# 6. 개발 서버 시작 (PM2)
 pm2 start ecosystem.config.cjs
 
-# 6. 테스트
+# 7. 테스트
 npm run test
 ```
 
@@ -302,24 +312,52 @@ npm run deploy:prod
 5. ✅ **동적 메시지 생성**
    - 설문 9번 응답 기반 고용 이슈 분석
    - 점수별 맞춤형 솔루션 표시
-6. ✅ 관리자 대시보드
+6. ✅ **이메일 자동 발송 시스템**
+   - Resend API 연동
+   - 설문 제출 시 자동 발송
+   - 전문적인 HTML 이메일 템플릿
+   - 리포트 링크 포함
+   - 관리자 대시보드에서 수동 재발송 기능
+7. ✅ 관리자 대시보드
    - 통계 카드 (전체 응답, 컨설팅 신청, 발송 건수)
    - 설문 응답 목록
    - 상세 정보 모달
-7. ✅ 고객 DB 구축 (D1 데이터베이스)
-8. ✅ Git 버전 관리
+   - 이메일 발송/재발송 버튼
+8. ✅ 고객 DB 구축 (D1 데이터베이스)
+9. ✅ Git 버전 관리
+
+### 📧 이메일 발송 기능
+
+**자동 발송**:
+- 설문 제출 완료 시 담당자 이메일로 자동 발송
+- 리포트 링크, 진단 결과 요약 포함
+- 발송 실패해도 설문 제출은 성공 처리
+
+**수동 발송** (관리자):
+- 관리자 대시보드에서 "발송" 또는 "재발송" 버튼
+- 개별 또는 일괄 발송 가능
+
+**이메일 템플릿**:
+- **제목**: [G-DAX] {회사명} 산업전환 진단 리포트가 완성되었습니다
+- **내용**:
+  - 회사명, 대표자명, 담당자명 개인화
+  - 진단 결과 (Type I~IV)
+  - 리포트 확인 버튼 (CTA)
+  - 컨설팅 안내
+  - 주관 기관 정보
+
+**설정 방법**:
+- 자세한 설정 가이드는 `EMAIL_SETUP.md` 참고
+- Resend API 키 발급 및 환경 변수 설정 필요
+- 무료 플랜: 월 3,000통 발송 가능
 
 ### ⏳ 향후 구현 예정 기능
-
-**이메일 자동 발송**
-- 리포트 이메일 발송 (Resend/SendGrid API 연동 필요)
-- API 키 설정 후 구현 가능
-- 발송 상태 추적
 
 **추가 기능**
 - Excel 내보내기
 - 고급 필터링 및 검색
 - 대시보드 차트 추가
+- 커스텀 도메인 이메일 발송
 
 ## 🔑 API 엔드포인트
 
@@ -332,6 +370,12 @@ npm run deploy:prod
 - `GET /api/report/:id` - **G-DAX 진단 리포트 생성 및 조회**
   - 4분면 매트릭스 판정
   - 맞춤형 솔루션 처방
+  - 고용 이슈 동적 분석
+
+### 이메일 관련
+- `POST /api/send-email/:id` - **이메일 발송/재발송** (관리자용)
+  - 설문 ID 기반 리포트 이메일 발송
+  - 진단 타입 자동 계산 포함
   - 고용 이슈 동적 분석
 
 ### 통계 관련
@@ -361,14 +405,16 @@ npm run deploy:prod
 
 ## 🎯 다음 단계 권장 사항
 
-1. **이메일 발송 기능 구현**
-   - Resend 또는 SendGrid API 키 발급
-   - 이메일 템플릿 작성 (리포트 링크 포함)
-   - 자동 발송 로직 구현
+1. **이메일 발송 기능 활성화** ✅
+   - ✅ Resend API 키 발급 (`EMAIL_SETUP.md` 참고)
+   - ✅ `.dev.vars` 파일에 API 키 설정
+   - ✅ 프로덕션 환경 변수 설정 (Cloudflare Pages)
+   - 커스텀 도메인 이메일 설정 (선택)
 
 2. **Cloudflare Pages 프로덕션 배포**
    - Cloudflare API 토큰 설정
    - 프로덕션 D1 데이터베이스 생성
+   - 환경 변수 설정 (RESEND_API_KEY, BASE_URL)
    - 커스텀 도메인 연결
 
 3. **관리자 인증 추가**
@@ -389,6 +435,14 @@ npm run deploy:prod
 ## 📄 라이선스
 
 이 프로젝트는 G-DAX 산업·일자리 전환 진단 시스템입니다.
+
+---
+
+**마지막 업데이트**: 2026-01-27
+**개발 환경**: Sandbox (Novita.ai)
+**프로덕션 배포**: 준비 완료
+**진단 모델**: G-DAX 4분면 매트릭스
+**이메일 발송**: Resend API 연동 완료
 
 ---
 
