@@ -1,4 +1,4 @@
-// 리포트 페이지 JavaScript
+// G-DAX 산업·일자리 전환 진단 리포트 JavaScript
 
 async function loadReport() {
   try {
@@ -22,175 +22,547 @@ function renderReport(report) {
   const container = document.getElementById('reportContent');
   
   const html = `
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-blue-900 mb-2">
-        <i class="fas fa-file-alt mr-2"></i>
-        산업전환 준비도 진단 리포트
-      </h1>
-      <p class="text-gray-600">${report.company_name}</p>
-    </div>
-
-    <!-- 종합 점수 -->
-    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8 mb-8 text-center">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">종합 준비도</h2>
-      <div class="flex items-center justify-center gap-4">
-        <div class="text-6xl font-bold" style="color: ${report.gradeColor};">
-          ${report.totalScore}
-        </div>
-        <div>
-          <div class="text-4xl font-bold mb-2" style="color: ${report.gradeColor};">
-            ${report.grade}등급
+    <!-- 1. 표지 (Cover Page) -->
+    <div class="bg-gradient-to-br from-blue-900 to-blue-700 text-white rounded-lg p-12 mb-8 text-center">
+      <div class="mb-6">
+        <i class="fas fa-industry text-6xl mb-4"></i>
+        <h1 class="text-4xl font-bold mb-2">G-DAX 산업·일자리 전환 진단 리포트</h1>
+        <p class="text-xl text-blue-100">Job Transition Diagnosis Report</p>
+      </div>
+      
+      <div class="bg-white/10 backdrop-blur rounded-lg p-6 max-w-2xl mx-auto">
+        <div class="grid grid-cols-2 gap-4 text-left">
+          <div>
+            <p class="text-blue-200 text-sm mb-1">수신</p>
+            <p class="text-xl font-bold">${report.company_name}</p>
+            <p class="text-lg">${report.ceo_name} 님 귀중</p>
           </div>
-          <div class="text-sm text-gray-600">5.0 만점</div>
+          <div>
+            <p class="text-blue-200 text-sm mb-1">진단일</p>
+            <p class="text-xl font-bold">${report.diagnosis_date}</p>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-white/20 text-sm">
+          <p class="text-blue-100">주관: 고용노동부 / 한국표준협회</p>
         </div>
       </div>
     </div>
 
-    <!-- 영역별 점수 -->
-    <div class="mb-8">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">
-        <i class="fas fa-chart-bar mr-2 text-blue-600"></i>
-        영역별 준비도 분석
+    <!-- 2. 종합 진단 결과 -->
+    <div class="bg-white border-4 rounded-lg p-8 mb-8" style="border-color: ${report.typeColor};">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">
+        <i class="fas fa-clipboard-check mr-2"></i>
+        종합 진단 결과
       </h2>
-      <div class="grid md:grid-cols-2 gap-6">
-        ${renderScoreCard('탄소중립/기후변화', report.scores.climate, 'fa-leaf', 'green')}
-        ${renderScoreCard('디지털/AI 혁신', report.scores.digital, 'fa-microchip', 'blue')}
-        ${renderScoreCard('고용 현황/일자리 질', report.scores.employment, 'fa-users', 'purple')}
-        ${renderScoreCard('전환 준비도', report.scores.readiness, 'fa-chart-line', 'orange')}
+      
+      <div class="bg-gray-50 rounded-lg p-6 mb-6">
+        <p class="text-lg mb-4">
+          "<strong>${report.company_name}</strong>의 진단 결과는 
+          <span class="text-2xl font-bold px-4 py-2 rounded inline-block" style="background-color: ${report.typeColor}; color: white;">
+            ${report.diagnosisType}
+          </span> 
+          입니다."
+        </p>
+        <p class="text-gray-700 leading-relaxed">
+          ${report.typeDescription}
+        </p>
       </div>
-    </div>
 
-    <!-- 레이더 차트 -->
-    <div class="mb-8">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">
-        <i class="fas fa-chart-area mr-2 text-blue-600"></i>
-        종합 분석 차트
-      </h2>
-      <div class="bg-gray-50 rounded-lg p-6">
-        <canvas id="radarChart" width="400" height="300"></canvas>
-      </div>
-    </div>
-
-    <!-- 개선 제안 -->
-    <div class="mb-8">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">
-        <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
-        맞춤형 개선 제안
-      </h2>
-      <div class="space-y-3">
-        ${report.recommendations.length > 0 ? 
-          report.recommendations.map((rec, idx) => `
-            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
-              <p class="font-medium text-gray-800">
-                <span class="bg-yellow-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm mr-2">${idx + 1}</span>
-                ${rec}
-              </p>
+      <!-- G-DAX 4분면 매트릭스 -->
+      <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">
+          <i class="fas fa-chart-area mr-2 text-blue-600"></i>
+          G-DAX 4분면 위치 확인
+        </h3>
+        
+        <div class="relative" style="height: 500px;">
+          <canvas id="matrixChart"></canvas>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 mt-6">
+          <div class="bg-red-50 border-2 border-red-500 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium text-gray-700">탄소 리스크 (X축)</span>
+              <span class="text-2xl font-bold text-red-600">${report.climateRiskPercent}점</span>
             </div>
-          `).join('') :
-          '<div class="bg-green-50 border-l-4 border-green-500 p-4 rounded"><p class="font-medium text-gray-800"><i class="fas fa-check-circle mr-2 text-green-500"></i>우수한 준비도를 갖추고 있습니다!</p></div>'
-        }
+            <div class="text-sm text-gray-600">
+              <strong>${report.scores.climateTotal}점</strong> / 15점 만점
+              ${parseFloat(report.climateRiskPercent) >= 60 ? '<span class="text-red-600 font-bold ml-2">(심각)</span>' : '<span class="text-green-600 font-bold ml-2">(양호)</span>'}
+            </div>
+          </div>
+          
+          <div class="bg-blue-50 border-2 border-blue-500 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium text-gray-700">디지털 시급성 (Y축)</span>
+              <span class="text-2xl font-bold text-blue-600">${report.digitalUrgencyPercent}점</span>
+            </div>
+            <div class="text-sm text-gray-600">
+              <strong>${report.scores.digitalTotal}점</strong> / 15점 만점
+              ${parseFloat(report.digitalUrgencyPercent) >= 60 ? '<span class="text-red-600 font-bold ml-2">(시급)</span>' : '<span class="text-green-600 font-bold ml-2">(양호)</span>'}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 지원 분야 -->
-    <div class="mb-8">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">
-        <i class="fas fa-hands-helping mr-2 text-blue-600"></i>
-        선택하신 지원 분야
+    <!-- 3. 상세 분석 및 이슈 도출 -->
+    <div class="bg-white border-2 border-gray-200 rounded-lg p-8 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">
+        <i class="fas fa-search mr-2 text-blue-600"></i>
+        상세 분석 및 이슈 도출
       </h2>
-      <div class="flex flex-wrap gap-2">
-        ${report.support_areas.map(area => `
-          <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
-            <i class="fas fa-check mr-1"></i>${area}
-          </span>
-        `).join('')}
+
+      <!-- 환경(Green) 리스크 분석 -->
+      <div class="mb-6 pb-6 border-b">
+        <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+          <i class="fas fa-leaf mr-2 text-green-600"></i>
+          ① 환경(Green) 리스크 분석
+        </h3>
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded mb-3">
+          <p class="font-medium text-gray-800 mb-2">
+            <strong>상태:</strong> 
+            ${parseFloat(report.climateRiskPercent) >= 60 
+              ? '원청사의 RE100 요구 및 에너지 비용 상승 압박이 심화되고 있습니다.' 
+              : '현재 탄소 규제 리스크는 비교적 관리 가능한 수준입니다.'}
+          </p>
+          <p class="text-gray-700">
+            <strong>예측:</strong> 
+            ${parseFloat(report.climateRiskPercent) >= 60 
+              ? '향후 3년 내 기존 내연기관/화력 관련 매출 감소가 예상되므로, 사업 모델 자체의 변화가 필요합니다.' 
+              : '지속 가능한 경영을 위해 선제적인 탄소중립 전략 수립을 권장합니다.'}
+          </p>
+        </div>
+      </div>
+
+      <!-- 디지털(Digital) 역량 분석 -->
+      <div class="mb-6 pb-6 border-b">
+        <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+          <i class="fas fa-microchip mr-2 text-blue-600"></i>
+          ② 디지털(Digital) 역량 분석
+        </h3>
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mb-3">
+          <p class="font-medium text-gray-800 mb-2">
+            <strong>상태:</strong> 
+            ${parseFloat(report.digitalUrgencyPercent) >= 60 
+              ? '경쟁사 대비 생산성 하락 우려가 있으며, 스마트공장/AI 솔루션 도입이 시급한 상황입니다.' 
+              : '디지털 역량이 비교적 양호하나, 지속적인 업그레이드가 필요합니다.'}
+          </p>
+          <p class="text-gray-700">
+            <strong>과제:</strong> 
+            ${parseFloat(report.digitalUrgencyPercent) >= 60 
+              ? '단순 전산화(ERP)를 넘어, 공정 데이터를 분석하고 제어하는 지능형 시스템 구축이 시급합니다.' 
+              : '현재의 디지털 역량을 유지하면서, AI 및 빅데이터 활용 역량을 점진적으로 확대하십시오.'}
+          </p>
+        </div>
+      </div>
+
+      <!-- 고용(HR) 및 일자리 충격 분석 -->
+      <div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+          <i class="fas fa-users mr-2 text-purple-600"></i>
+          ③ 고용(HR) 및 일자리 충격 분석
+        </h3>
+        
+        ${report.employmentMessages.length > 0 ? `
+          <div class="space-y-3">
+            ${report.employmentMessages.map((issue, idx) => {
+              const colors = {
+                critical: { bg: 'bg-red-50', border: 'border-red-500', text: 'text-red-800', icon: 'fa-exclamation-triangle' },
+                high: { bg: 'bg-orange-50', border: 'border-orange-500', text: 'text-orange-800', icon: 'fa-exclamation-circle' },
+                medium: { bg: 'bg-yellow-50', border: 'border-yellow-500', text: 'text-yellow-800', icon: 'fa-info-circle' }
+              };
+              const color = colors[issue.level];
+              return `
+                <div class="${color.bg} border-l-4 ${color.border} p-4 rounded">
+                  <p class="font-bold ${color.text} mb-2 flex items-center">
+                    <i class="fas ${color.icon} mr-2"></i>
+                    ${issue.title}
+                  </p>
+                  <p class="text-gray-700">${issue.message}</p>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : `
+          <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+            <p class="font-medium text-gray-800">
+              <i class="fas fa-check-circle mr-2 text-green-600"></i>
+              현재 고용 및 일자리 측면에서 특별한 이슈가 발견되지 않았습니다. 안정적인 인력 운영이 이루어지고 있습니다.
+            </p>
+          </div>
+        `}
       </div>
     </div>
 
-    <!-- 컨설팅 신청 -->
-    <div class="${report.consulting_application ? 'bg-green-50 border-green-500' : 'bg-gray-50 border-gray-300'} border-2 rounded-lg p-6">
-      <h2 class="text-xl font-bold text-gray-800 mb-2">
-        <i class="fas ${report.consulting_application ? 'fa-check-circle text-green-600' : 'fa-info-circle text-gray-600'} mr-2"></i>
-        산업·일자리전환 컨설팅
+    <!-- 4. 맞춤형 솔루션 처방 -->
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-8 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">
+        <i class="fas fa-prescription-bottle mr-2 text-blue-600"></i>
+        맞춤형 솔루션 처방
       </h2>
-      <p class="text-gray-700">
-        ${report.consulting_application ? 
-          '✅ 신청이 완료되었습니다. 담당자가 곧 연락드릴 예정입니다.' :
-          '아직 신청하지 않으셨습니다.'
-        }
+
+      <!-- STEP 1: 비즈니스 솔루션 -->
+      <div class="mb-8">
+        <div class="bg-blue-600 text-white px-4 py-2 rounded-t-lg">
+          <h3 class="text-xl font-bold flex items-center">
+            <i class="fas fa-briefcase mr-2"></i>
+            STEP 1. 비즈니스 솔루션: 사업재편
+          </h3>
+        </div>
+        <div class="bg-white border-2 border-blue-600 rounded-b-lg p-6">
+          ${report.solutions.business.length > 0 ? report.solutions.business.map(solution => `
+            <div class="mb-4 last:mb-0">
+              <h4 class="text-lg font-bold text-gray-800 mb-2">
+                <i class="fas fa-check-circle mr-2 text-blue-600"></i>
+                ${solution.title}
+              </h4>
+              <p class="text-gray-700 mb-3">${solution.description}</p>
+              ${solution.keywords ? `
+                <div class="flex flex-wrap gap-2">
+                  <span class="text-sm text-gray-600 mr-2">추천 키워드:</span>
+                  ${solution.keywords.map(keyword => `
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                      ${keyword}
+                    </span>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `).join('<hr class="my-4">') : '<p class="text-gray-600">현재 단계에서는 특별한 사업재편이 필요하지 않습니다.</p>'}
+        </div>
+      </div>
+
+      <!-- STEP 2: HR 솔루션 -->
+      <div class="mb-8">
+        <div class="bg-purple-600 text-white px-4 py-2 rounded-t-lg">
+          <h3 class="text-xl font-bold flex items-center">
+            <i class="fas fa-users-cog mr-2"></i>
+            STEP 2. HR 솔루션: 노동전환 고용안정
+          </h3>
+        </div>
+        <div class="bg-white border-2 border-purple-600 rounded-b-lg p-6">
+          ${report.solutions.hr.length > 0 ? report.solutions.hr.map(solution => `
+            <div class="mb-4 last:mb-0">
+              <h4 class="text-lg font-bold text-gray-800 mb-2">
+                <i class="fas fa-arrow-right mr-2 text-purple-600"></i>
+                ${solution.title}
+              </h4>
+              <p class="text-gray-700">${solution.description}</p>
+            </div>
+          `).join('<hr class="my-4">') : '<p class="text-gray-600">현재 HR 측면에서 시급한 과제가 발견되지 않았습니다.</p>'}
+        </div>
+      </div>
+
+      <!-- STEP 3: 정부 지원사업 매칭 -->
+      <div>
+        <div class="bg-green-600 text-white px-4 py-2 rounded-t-lg">
+          <h3 class="text-xl font-bold flex items-center">
+            <i class="fas fa-landmark mr-2"></i>
+            STEP 3. 정부 지원사업 매칭 (Policy Bridge)
+          </h3>
+        </div>
+        <div class="bg-white border-2 border-green-600 rounded-b-lg p-6">
+          <div class="space-y-4">
+            ${report.solutions.government.map((program, idx) => `
+              <div class="flex items-start gap-4 p-4 bg-green-50 rounded-lg">
+                <div class="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">
+                  ${idx + 1}
+                </div>
+                <div class="flex-1">
+                  <h4 class="text-lg font-bold text-gray-800 mb-1">${program.name}</h4>
+                  <p class="text-gray-700 mb-2">${program.description}</p>
+                  <p class="text-sm text-green-700 font-medium">
+                    <i class="fas fa-building mr-1"></i>
+                    담당: ${program.department}
+                  </p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 향후 추진 계획 -->
+    <div class="bg-white border-2 border-gray-200 rounded-lg p-8 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">
+        <i class="fas fa-calendar-check mr-2 text-blue-600"></i>
+        향후 추진 계획
+      </h2>
+
+      <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded mb-6">
+        <p class="text-lg text-gray-800 mb-4">
+          귀하께서 선택하신 
+          <strong class="text-blue-600">"${report.support_areas.join(', ')}"</strong> 
+          지원 분야 니즈를 반영하여, 전문 컨설턴트가 <strong class="text-red-600">3일 이내</strong>에 연락드릴 예정입니다.
+        </p>
+        
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+          <div class="bg-white rounded-lg p-4">
+            <p class="text-sm text-gray-600 mb-1">담당 컨설턴트</p>
+            <p class="text-xl font-bold text-gray-800">
+              <i class="fas fa-user-tie mr-2 text-blue-600"></i>
+              G-DAX 전문위원
+            </p>
+          </div>
+          <div class="bg-white rounded-lg p-4">
+            <p class="text-sm text-gray-600 mb-1">연락처</p>
+            <p class="text-xl font-bold text-gray-800">
+              <i class="fas fa-phone mr-2 text-green-600"></i>
+              010-1234-5678
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4">
+          <p class="text-sm text-gray-600 mb-2">다음 절차</p>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
+              1. 방문 인터뷰
+            </span>
+            <i class="fas fa-arrow-right text-gray-400"></i>
+            <span class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
+              2. 심층 진단
+            </span>
+            <i class="fas fa-arrow-right text-gray-400"></i>
+            <span class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
+              3. 이행 계획 수립
+            </span>
+          </div>
+        </div>
+      </div>
+
+      ${report.consulting_application ? `
+        <div class="bg-green-50 border-2 border-green-500 rounded-lg p-6">
+          <h3 class="text-xl font-bold text-green-800 mb-2 flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            산업·일자리전환 컨설팅 신청 완료
+          </h3>
+          <p class="text-gray-700">
+            고용노동부와 한국표준협회가 전액 무료로 지원하는 컨설팅을 신청하셨습니다. 
+            담당자가 ${report.contact_name} ${report.contact_position || '님'}께 곧 연락드릴 예정입니다.
+          </p>
+        </div>
+      ` : `
+        <div class="bg-gray-50 border-2 border-gray-300 rounded-lg p-6">
+          <h3 class="text-xl font-bold text-gray-800 mb-2 flex items-center">
+            <i class="fas fa-info-circle mr-2"></i>
+            컨설팅 신청 안내
+          </h3>
+          <p class="text-gray-700 mb-3">
+            아직 컨설팅을 신청하지 않으셨습니다. 
+            고용노동부와 한국표준협회가 전액 무료로 지원하는 전문 컨설팅을 받으실 수 있습니다.
+          </p>
+          <a href="/" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700">
+            <i class="fas fa-pencil-alt mr-2"></i>
+            컨설팅 신청하기
+          </a>
+        </div>
+      `}
+    </div>
+
+    <!-- 리포트 푸터 -->
+    <div class="text-center text-sm text-gray-500 border-t pt-6">
+      <p class="mb-2">본 진단 결과는 G-DAX (Green-Digital-Aging-eXpert) 모델을 기반으로 자동 생성되었습니다.</p>
+      <p>보다 정확한 진단과 맞춤형 솔루션을 원하시면 전문 컨설팅을 신청해 주세요.</p>
+      <p class="mt-4 font-medium text-gray-700">
+        <i class="fas fa-building mr-2"></i>
+        주관: 고용노동부 / 한국표준협회
       </p>
-    </div>
-
-    <div class="mt-8 text-center text-sm text-gray-500">
-      <p>본 진단 결과는 자가진단 설문을 기반으로 자동 생성되었습니다.</p>
-      <p>보다 정확한 진단을 원하시면 전문 컨설팅을 신청해 주세요.</p>
     </div>
   `;
   
   container.innerHTML = html;
   
-  // 차트 렌더링
-  renderRadarChart(report.scores);
+  // 4분면 매트릭스 차트 렌더링
+  renderMatrixChart(report);
 }
 
-function renderScoreCard(title, score, icon, color) {
-  const percentage = (score / 5) * 100;
-  const colorClasses = {
-    green: { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-600', bar: 'bg-green-500' },
-    blue: { bg: 'bg-blue-50', border: 'border-blue-500', text: 'text-blue-600', bar: 'bg-blue-500' },
-    purple: { bg: 'bg-purple-50', border: 'border-purple-500', text: 'text-purple-600', bar: 'bg-purple-500' },
-    orange: { bg: 'bg-orange-50', border: 'border-orange-500', text: 'text-orange-600', bar: 'bg-orange-500' }
-  };
-  const colors = colorClasses[color];
+function renderMatrixChart(report) {
+  const ctx = document.getElementById('matrixChart').getContext('2d');
   
-  return `
-    <div class="${colors.bg} border-2 ${colors.border} rounded-lg p-6">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="font-bold text-gray-800">
-          <i class="fas ${icon} mr-2 ${colors.text}"></i>
-          ${title}
-        </h3>
-        <span class="text-2xl font-bold ${colors.text}">${score.toFixed(1)}</span>
-      </div>
-      <div class="w-full bg-gray-200 rounded-full h-3">
-        <div class="${colors.bar} h-3 rounded-full transition-all" style="width: ${percentage}%"></div>
-      </div>
-    </div>
-  `;
-}
-
-function renderRadarChart(scores) {
-  const ctx = document.getElementById('radarChart').getContext('2d');
+  // 4분면 배경 색상
+  const quadrantPlugin = {
+    id: 'quadrantPlugin',
+    beforeDraw: (chart) => {
+      const ctx = chart.ctx;
+      const chartArea = chart.chartArea;
+      const xMid = (chartArea.left + chartArea.right) / 2;
+      const yMid = (chartArea.top + chartArea.bottom) / 2;
+      
+      // Type IV (좌하단) - 안정 유지형
+      ctx.fillStyle = 'rgba(8, 145, 178, 0.1)';
+      ctx.fillRect(chartArea.left, yMid, xMid - chartArea.left, chartArea.bottom - yMid);
+      
+      // Type III (좌상단) - 탄소 대응형
+      ctx.fillStyle = 'rgba(22, 163, 74, 0.1)';
+      ctx.fillRect(chartArea.left, chartArea.top, xMid - chartArea.left, yMid - chartArea.top);
+      
+      // Type II (우상단) - 디지털 선도형
+      ctx.fillStyle = 'rgba(37, 99, 235, 0.1)';
+      ctx.fillRect(xMid, chartArea.top, chartArea.right - xMid, yMid - chartArea.top);
+      
+      // Type I (우하단) - 구조 전환형
+      ctx.fillStyle = 'rgba(220, 38, 38, 0.1)';
+      ctx.fillRect(xMid, yMid, chartArea.right - xMid, chartArea.bottom - yMid);
+    }
+  };
   
   new Chart(ctx, {
-    type: 'radar',
+    type: 'scatter',
+    plugins: [quadrantPlugin],
     data: {
-      labels: ['탄소중립/기후변화', '디지털/AI 혁신', '고용 현황/일자리 질', '전환 준비도'],
       datasets: [{
-        label: '준비도 점수',
-        data: [scores.climate, scores.digital, scores.employment, scores.readiness],
-        backgroundColor: 'rgba(59, 130, 246, 0.2)',
-        borderColor: 'rgba(59, 130, 246, 1)',
-        borderWidth: 2,
-        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+        label: '귀사의 위치 (You are Here)',
+        data: [{
+          x: parseFloat(report.climateRiskPercent),
+          y: parseFloat(report.digitalUrgencyPercent)
+        }],
+        backgroundColor: report.typeColor,
+        borderColor: report.typeColor,
+        borderWidth: 3,
+        pointRadius: 12,
+        pointHoverRadius: 15
       }]
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
-        r: {
-          beginAtZero: true,
-          max: 5,
+        x: {
+          title: {
+            display: true,
+            text: '탄소 리스크 (Climate Risk) →',
+            font: {
+              size: 14,
+              weight: 'bold',
+              family: "'맑은 고딕', 'Malgun Gothic', sans-serif"
+            }
+          },
+          min: 0,
+          max: 100,
           ticks: {
-            stepSize: 1
+            stepSize: 20,
+            callback: function(value) {
+              return value + '점';
+            }
+          },
+          grid: {
+            color: (context) => {
+              if (context.tick.value === 60) {
+                return 'rgba(0, 0, 0, 0.5)';
+              }
+              return 'rgba(0, 0, 0, 0.1)';
+            },
+            lineWidth: (context) => {
+              if (context.tick.value === 60) {
+                return 2;
+              }
+              return 1;
+            }
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: '↑ 디지털 시급성 (Digital Urgency)',
+            font: {
+              size: 14,
+              weight: 'bold',
+              family: "'맑은 고딕', 'Malgun Gothic', sans-serif"
+            }
+          },
+          min: 0,
+          max: 100,
+          ticks: {
+            stepSize: 20,
+            callback: function(value) {
+              return value + '점';
+            }
+          },
+          grid: {
+            color: (context) => {
+              if (context.tick.value === 60) {
+                return 'rgba(0, 0, 0, 0.5)';
+              }
+              return 'rgba(0, 0, 0, 0.1)';
+            },
+            lineWidth: (context) => {
+              if (context.tick.value === 60) {
+                return 2;
+              }
+              return 1;
+            }
           }
         }
       },
       plugins: {
         legend: {
-          display: false
+          display: true,
+          position: 'top',
+          labels: {
+            font: {
+              size: 14,
+              weight: 'bold',
+              family: "'맑은 고딕', 'Malgun Gothic', sans-serif"
+            },
+            usePointStyle: true,
+            pointStyle: 'circle'
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return [
+                `탄소 리스크: ${context.parsed.x.toFixed(1)}점`,
+                `디지털 시급성: ${context.parsed.y.toFixed(1)}점`
+              ];
+            }
+          }
+        },
+        annotation: {
+          annotations: {
+            type1: {
+              type: 'label',
+              xValue: 80,
+              yValue: 80,
+              content: ['Type I.', '구조 전환형'],
+              font: {
+                size: 11,
+                weight: 'bold'
+              }
+            },
+            type2: {
+              type: 'label',
+              xValue: 30,
+              yValue: 80,
+              content: ['Type II.', '디지털 선도형'],
+              font: {
+                size: 11,
+                weight: 'bold'
+              }
+            },
+            type3: {
+              type: 'label',
+              xValue: 80,
+              yValue: 30,
+              content: ['Type III.', '탄소 대응형'],
+              font: {
+                size: 11,
+                weight: 'bold'
+              }
+            },
+            type4: {
+              type: 'label',
+              xValue: 30,
+              yValue: 30,
+              content: ['Type IV.', '안정 유지형'],
+              font: {
+                size: 11,
+                weight: 'bold'
+              }
+            }
+          }
         }
       }
     }

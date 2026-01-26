@@ -143,51 +143,173 @@ app.get('/api/report/:id', async (c) => {
     }
 
     // 점수 계산
+    const climateTotal = survey.climate_risk_1 + survey.climate_risk_2 + survey.climate_risk_3
+    const digitalTotal = survey.digital_urgency_1 + survey.digital_urgency_2 + survey.digital_urgency_3
+    const employmentTotal = survey.employment_status_1 + survey.employment_status_2 + survey.employment_status_3 + survey.employment_status_4
+    
     const scores = {
-      climate: (survey.climate_risk_1 + survey.climate_risk_2 + survey.climate_risk_3) / 3,
-      digital: (survey.digital_urgency_1 + survey.digital_urgency_2 + survey.digital_urgency_3) / 3,
-      employment: (survey.employment_status_1 + survey.employment_status_2 + survey.employment_status_3 + survey.employment_status_4) / 4,
-      readiness: survey.readiness_level
+      climate: climateTotal / 3,
+      digital: digitalTotal / 3,
+      employment: employmentTotal / 4,
+      readiness: survey.readiness_level,
+      climateTotal: climateTotal,
+      digitalTotal: digitalTotal,
+      employmentTotal: employmentTotal
     }
 
-    const totalScore = (scores.climate + scores.digital + scores.employment + scores.readiness) / 4
-
-    // 등급 판정
-    let grade = '하'
-    let gradeColor = '#ef4444'
-    if (totalScore >= 4.0) {
-      grade = '상'
-      gradeColor = '#22c55e'
-    } else if (totalScore >= 3.0) {
-      grade = '중'
-      gradeColor = '#f59e0b'
+    // G-DAX 4분면 매트릭스 판정 (X축: 탄소리스크, Y축: 디지털시급성)
+    let diagnosisType = ''
+    let typeColor = ''
+    let typeDescription = ''
+    let matrixPosition = { x: 0, y: 0 }
+    
+    // X축: 탄소 리스크 (15점 만점을 100점 만점으로 환산)
+    const climateRiskPercent = (climateTotal / 15) * 100
+    // Y축: 디지털 시급성 (15점 만점을 100점 만점으로 환산)
+    const digitalUrgencyPercent = (digitalTotal / 15) * 100
+    
+    matrixPosition.x = climateRiskPercent
+    matrixPosition.y = digitalUrgencyPercent
+    
+    // 4분면 판정 (기준: 60점)
+    if (climateRiskPercent >= 60 && digitalUrgencyPercent >= 60) {
+      diagnosisType = 'Type I. 구조 전환형 (Structural Transformation)'
+      typeColor = '#dc2626'
+      typeDescription = '복합 위기: 탄소 규제 리스크가 높고, 디지털 전환의 필요성도 매우 높은 상태입니다.'
+    } else if (climateRiskPercent < 60 && digitalUrgencyPercent >= 60) {
+      diagnosisType = 'Type II. 디지털 선도형 (Digital Leader)'
+      typeColor = '#2563eb'
+      typeDescription = '디지털 우선: 탄소 리스크는 낮으나, 디지털 혁신이 시급한 상태입니다.'
+    } else if (climateRiskPercent >= 60 && digitalUrgencyPercent < 60) {
+      diagnosisType = 'Type III. 탄소 대응형 (Green Transition)'
+      typeColor = '#16a34a'
+      typeDescription = '환경 우선: 디지털 역량은 양호하나, 탄소 규제 대응이 시급한 상태입니다.'
+    } else {
+      diagnosisType = 'Type IV. 안정 유지형 (Stable Operation)'
+      typeColor = '#0891b2'
+      typeDescription = '안정 구간: 탄소 리스크와 디지털 시급성이 모두 낮은 안정적인 상태입니다.'
     }
 
-    // 개선 제안 생성
-    const recommendations = []
-    if (scores.climate < 3.0) {
-      recommendations.push('탄소중립 대응 전략 수립이 시급합니다.')
+    // 고용 이슈 분석 (설문 9번 기반)
+    const employmentIssues = {
+      recruitmentIssue: survey.employment_status_1 >= 4,
+      jobTransitionNeed: survey.employment_status_2 >= 4,
+      employeeAnxiety: survey.employment_status_3 >= 4,
+      digitalSkillGap: survey.employment_status_4 >= 4
     }
-    if (scores.digital < 3.0) {
-      recommendations.push('디지털 전환 및 스마트공장 도입을 검토하세요.')
+    
+    // 고용 이슈 메시지 생성
+    const employmentMessages = []
+    if (employmentIssues.recruitmentIssue) {
+      employmentMessages.push({
+        title: '구인난 및 기술 전수 문제',
+        message: '심각한 구인난을 겪고 있거나 핵심 기술 인력의 고령화로 기술 전수가 시급합니다. 자동화 설비 도입과 동시에 기술 문서화 프로젝트가 필요합니다.',
+        level: 'critical'
+      })
     }
-    if (scores.employment < 3.0) {
-      recommendations.push('직원 재교육 및 고용안정 프로그램이 필요합니다.')
+    if (employmentIssues.jobTransitionNeed) {
+      employmentMessages.push({
+        title: '직무 변화 압력',
+        message: '새로운 설비나 기술 도입으로 기존 직원들이 수행하던 업무가 없어지거나, 새로운 기술을 배워야 할 필요성이 있습니다. 직무 전환 교육 프로그램이 필수적입니다.',
+        level: 'high'
+      })
     }
-    if (scores.readiness < 3.0) {
-      recommendations.push('경영진의 산업전환 의지를 강화해야 합니다.')
+    if (employmentIssues.employeeAnxiety) {
+      employmentMessages.push({
+        title: '조직 심리 및 소통 문제',
+        message: '직무 전환 배치나 근로 조건 변경과 관련하여 직원들의 불안감이 높거나 노사 간 소통 채널이 부족합니다. 투명한 커뮤니케이션 채널 구축이 선행되어야 합니다.',
+        level: 'high'
+      })
+    }
+    if (employmentIssues.digitalSkillGap) {
+      employmentMessages.push({
+        title: '디지털 역량 격차',
+        message: '직원들이 디지털 기기나 새로운 SW를 활용하는 데 어려움을 느끼고 있어 재교육이 필요합니다. 단계적 Upskilling 프로그램을 설계하십시오.',
+        level: 'medium'
+      })
+    }
+
+    // 맞춤형 솔루션 처방
+    const solutions = {
+      business: [],
+      hr: [],
+      government: []
+    }
+    
+    // 비즈니스 솔루션
+    if (climateRiskPercent >= 60) {
+      solutions.business.push({
+        title: '사업재편 승인',
+        description: '산업부의 「기업활력법」 사업재편 승인을 통해 R&D 자금과 세제 혜택을 확보하십시오.',
+        keywords: ['미래차 부품 전환', '탄소포집 기술', '친환경 소재 개발']
+      })
+    }
+    if (digitalUrgencyPercent >= 60) {
+      solutions.business.push({
+        title: '스마트공장 구축',
+        description: '단순 전산화(ERP)를 넘어, 공정 데이터를 분석하고 제어하는 지능형 시스템 구축이 시급합니다.',
+        keywords: ['스마트공장 고도화', 'AI 품질검사', '예지정비 시스템']
+      })
+    }
+    
+    // HR 솔루션
+    if (employmentIssues.jobTransitionNeed) {
+      solutions.hr.push({
+        title: '직무 전환 배치 설계',
+        description: '소멸 위기 직무 인력을 신규 장비 오퍼레이터로 전환하기 위한 교육 훈련을 설계해야 합니다.'
+      })
+    }
+    if (employmentIssues.digitalSkillGap) {
+      solutions.hr.push({
+        title: '재직자 Upskilling',
+        description: '디지털 기초 역량부터 고급 데이터 분석까지 단계적 교육 프로그램이 필요합니다.'
+      })
+    }
+    if (employmentIssues.employeeAnxiety) {
+      solutions.hr.push({
+        title: '노사 소통 강화',
+        description: '정기적인 타운홀 미팅과 익명 피드백 채널을 통해 직원 불안감을 해소해야 합니다.'
+      })
+    }
+    
+    // 정부 지원사업 매칭
+    solutions.government.push({
+      name: '노동전환 고용안정장려금',
+      description: '직무 전환 교육 실시 시 인건비 지원',
+      department: '고용노동부'
+    })
+    solutions.government.push({
+      name: '산업구조변화대응 특화훈련(산대특)',
+      description: '재직자 맞춤형 무료 기술 교육',
+      department: '고용노동부'
+    })
+    if (climateRiskPercent >= 60) {
+      solutions.government.push({
+        name: '탄소중립 R&D 지원사업',
+        description: '친환경 기술 개발 자금 지원',
+        department: '산업통상자원부'
+      })
     }
 
     const report = {
       survey_id: survey.id,
       company_name: survey.company_name,
+      ceo_name: survey.ceo_name,
+      diagnosis_date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.'),
       scores,
-      totalScore: totalScore.toFixed(2),
-      grade,
-      gradeColor,
-      recommendations,
+      diagnosisType,
+      typeColor,
+      typeDescription,
+      matrixPosition,
+      climateRiskPercent: climateRiskPercent.toFixed(1),
+      digitalUrgencyPercent: digitalUrgencyPercent.toFixed(1),
+      employmentMessages,
+      solutions,
       support_areas: JSON.parse(survey.support_areas),
-      consulting_application: survey.consulting_application
+      consulting_application: survey.consulting_application,
+      contact_name: survey.contact_name,
+      contact_position: survey.contact_position,
+      readiness_level: survey.readiness_level
     }
 
     // 리포트 생성 완료 플래그 업데이트
