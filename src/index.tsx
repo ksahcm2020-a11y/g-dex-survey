@@ -1,9 +1,13 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
+import { Resend } from 'resend'
+import { generateReportEmailHTML, generateReportEmailText } from './email-template'
 
 type Bindings = {
   DB: D1Database;
+  RESEND_API_KEY: string;
+  BASE_URL: string;
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -66,6 +70,58 @@ app.post('/api/survey', async (c) => {
     ).run()
 
     const surveyId = result.meta.last_row_id
+
+    // 이메일 자동 발송 (비동기 - 블로킹하지 않음)
+    try {
+      if (c.env.RESEND_API_KEY && c.env.BASE_URL) {
+        const resend = new Resend(c.env.RESEND_API_KEY)
+        
+        // 리포트 URL 생성
+        const reportUrl = `${c.env.BASE_URL}/report/${surveyId}`
+        
+        // 진단일 포맷
+        const diagnosisDate = new Date().toLocaleDateString('ko-KR', { 
+          year: 'numeric', 
+          month: '2-digit', 
+          day: '2-digit' 
+        }).replace(/\. /g, '.')
+
+        // 이메일 발송
+        await resend.emails.send({
+          from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
+          to: [data.contact_email],
+          subject: `[G-DAX] ${data.company_name} 산업전환 진단 리포트가 완성되었습니다`,
+          html: generateReportEmailHTML({
+            companyName: data.company_name,
+            ceoName: data.ceo_name,
+            contactName: data.contact_name,
+            reportUrl: reportUrl,
+            diagnosisType: '진단 완료', // 실제 타입은 리포트 생성 시 결정됨
+            diagnosisDate: diagnosisDate
+          }),
+          text: generateReportEmailText({
+            companyName: data.company_name,
+            ceoName: data.ceo_name,
+            contactName: data.contact_name,
+            reportUrl: reportUrl,
+            diagnosisType: '진단 완료',
+            diagnosisDate: diagnosisDate
+          })
+        })
+
+        // 이메일 발송 상태 업데이트
+        await c.env.DB.prepare(`
+          UPDATE survey_responses SET report_sent = 1 WHERE id = ?
+        `).bind(surveyId).run()
+
+        console.log(`Email sent successfully to ${data.contact_email}`)
+      } else {
+        console.warn('Email not sent: RESEND_API_KEY or BASE_URL not configured')
+      }
+    } catch (emailError) {
+      // 이메일 발송 실패해도 설문 제출은 성공으로 처리
+      console.error('Email sending error:', emailError)
+    }
 
     return c.json({ 
       success: true, 
@@ -351,6 +407,96 @@ app.get('/api/stats', async (c) => {
     console.error('Stats fetch error:', error)
     return c.json({ 
       error: '통계 조회 중 오류가 발생했습니다.',
+      details: error instanceof Error ? error.message : String(error)
+    }, 500)
+  }
+})
+
+// 이메일 발송 API (관리자용 - 수동 재발송)
+app.post('/api/send-email/:id', async (c) => {
+  try {
+    const id = c.req.param('id')
+    
+    // 설문 데이터 조회
+    const survey = await c.env.DB.prepare(`
+      SELECT * FROM survey_responses WHERE id = ?
+    `).bind(id).first() as any
+
+    if (!survey) {
+      return c.json({ error: '설문을 찾을 수 없습니다.' }, 404)
+    }
+
+    // API 키 확인
+    if (!c.env.RESEND_API_KEY || !c.env.BASE_URL) {
+      return c.json({ 
+        error: 'RESEND_API_KEY 또는 BASE_URL이 설정되지 않았습니다.',
+        details: 'Resend API 키를 설정해주세요. README의 환경 설정 가이드를 참고하세요.'
+      }, 500)
+    }
+
+    // 리포트 데이터 생성 (진단 타입 계산)
+    const climateTotal = survey.climate_risk_1 + survey.climate_risk_2 + survey.climate_risk_3
+    const digitalTotal = survey.digital_urgency_1 + survey.digital_urgency_2 + survey.digital_urgency_3
+    const climateRiskPercent = (climateTotal / 15) * 100
+    const digitalUrgencyPercent = (digitalTotal / 15) * 100
+    
+    let diagnosisType = ''
+    if (climateRiskPercent >= 60 && digitalUrgencyPercent >= 60) {
+      diagnosisType = 'Type I. 구조 전환형'
+    } else if (climateRiskPercent < 60 && digitalUrgencyPercent >= 60) {
+      diagnosisType = 'Type II. 디지털 선도형'
+    } else if (climateRiskPercent >= 60 && digitalUrgencyPercent < 60) {
+      diagnosisType = 'Type III. 탄소 대응형'
+    } else {
+      diagnosisType = 'Type IV. 안정 유지형'
+    }
+
+    const resend = new Resend(c.env.RESEND_API_KEY)
+    const reportUrl = `${c.env.BASE_URL}/report/${id}`
+    const diagnosisDate = new Date(survey.created_at).toLocaleDateString('ko-KR', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).replace(/\. /g, '.')
+
+    // 이메일 발송
+    const emailResult = await resend.emails.send({
+      from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
+      to: [survey.contact_email],
+      subject: `[G-DAX] ${survey.company_name} 산업전환 진단 리포트가 완성되었습니다`,
+      html: generateReportEmailHTML({
+        companyName: survey.company_name,
+        ceoName: survey.ceo_name,
+        contactName: survey.contact_name,
+        reportUrl: reportUrl,
+        diagnosisType: diagnosisType,
+        diagnosisDate: diagnosisDate
+      }),
+      text: generateReportEmailText({
+        companyName: survey.company_name,
+        ceoName: survey.ceo_name,
+        contactName: survey.contact_name,
+        reportUrl: reportUrl,
+        diagnosisType: diagnosisType,
+        diagnosisDate: diagnosisDate
+      })
+    })
+
+    // 이메일 발송 상태 업데이트
+    await c.env.DB.prepare(`
+      UPDATE survey_responses SET report_sent = 1 WHERE id = ?
+    `).bind(id).run()
+
+    return c.json({ 
+      success: true,
+      message: '이메일이 성공적으로 발송되었습니다.',
+      email: survey.contact_email,
+      email_id: emailResult.data?.id
+    })
+  } catch (error: unknown) {
+    console.error('Email sending error:', error)
+    return c.json({ 
+      error: '이메일 발송 중 오류가 발생했습니다.',
       details: error instanceof Error ? error.message : String(error)
     }, 500)
   }

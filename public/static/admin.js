@@ -92,6 +92,11 @@ async function loadSurveys() {
               class="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 text-xs">
               <i class="fas fa-info-circle mr-1"></i>상세
             </button>
+            <button onclick="sendEmail(${survey.id}, '${survey.contact_email}')" 
+              class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-xs"
+              title="이메일 ${survey.report_sent ? '재' : ''}발송">
+              <i class="fas fa-envelope mr-1"></i>${survey.report_sent ? '재발송' : '발송'}
+            </button>
           </div>
         </td>
       </tr>
@@ -112,6 +117,41 @@ async function loadSurveys() {
 
 function viewReport(surveyId) {
   window.open(`/report/${surveyId}`, '_blank');
+}
+
+async function sendEmail(surveyId, email) {
+  if (!confirm(`${email}로 리포트 이메일을 발송하시겠습니까?`)) {
+    return;
+  }
+
+  const button = event.target.closest('button');
+  const originalHTML = button.innerHTML;
+  button.disabled = true;
+  button.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>발송중...';
+
+  try {
+    const response = await axios.post(`/api/send-email/${surveyId}`);
+    
+    if (response.data.success) {
+      alert('이메일이 성공적으로 발송되었습니다!');
+      // 목록 새로고침
+      loadSurveys();
+    }
+  } catch (error) {
+    console.error('Email sending error:', error);
+    
+    let errorMessage = '이메일 발송 중 오류가 발생했습니다.';
+    if (error.response?.data?.error) {
+      errorMessage += '\n\n' + error.response.data.error;
+      if (error.response.data.details) {
+        errorMessage += '\n\n상세: ' + error.response.data.details;
+      }
+    }
+    
+    alert(errorMessage);
+    button.disabled = false;
+    button.innerHTML = originalHTML;
+  }
 }
 
 async function viewDetails(surveyId) {
