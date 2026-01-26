@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { serveStatic } from 'hono/cloudflare-workers'
+import { getCookie, setCookie } from 'hono/cookie'
 import { Resend } from 'resend'
 import { generateReportEmailHTML, generateReportEmailText } from './email-template'
 
@@ -8,9 +9,23 @@ type Bindings = {
   DB: D1Database;
   RESEND_API_KEY: string;
   BASE_URL: string;
+  ADMIN_PASSWORD: string;
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
+
+// 관리자 인증 미들웨어
+const adminAuth = async (c: any, next: any) => {
+  const session = getCookie(c, 'admin_session')
+  const adminPassword = c.env.ADMIN_PASSWORD || 'gdax2026!'
+  
+  // 세션이 유효한지 확인 (간단한 암호 기반)
+  if (session === `admin_${adminPassword}`) {
+    await next()
+  } else {
+    return c.redirect('/admin/login')
+  }
+}
 
 // CORS 설정
 app.use('/api/*', cors())
@@ -160,8 +175,146 @@ app.get('/api/survey/:id', async (c) => {
   }
 })
 
+// ============================================
+// 관리자 인증 API
+// ============================================
+
+// 로그인 페이지
+app.get('/admin/login', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>관리자 로그인 - G-DAX</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+          body { font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; }
+        </style>
+    </head>
+    <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
+            <div class="text-center mb-8">
+                <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">관리자 로그인</h1>
+                <p class="text-gray-600 mt-2">G-DAX 진단 시스템</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-lock mr-2"></i>비밀번호
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="관리자 비밀번호를 입력하세요"
+                        required
+                    >
+                </div>
+                
+                <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <span id="errorText"></span>
+                </div>
+                
+                <button 
+                    type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+                >
+                    <i class="fas fa-sign-in-alt mr-2"></i>로그인
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center text-sm text-gray-500">
+                <i class="fas fa-info-circle mr-1"></i>
+                비밀번호를 잊으셨다면 시스템 관리자에게 문의하세요.
+            </div>
+        </div>
+        
+        <script>
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault()
+                
+                const password = document.getElementById('password').value
+                const errorDiv = document.getElementById('errorMessage')
+                const errorText = document.getElementById('errorText')
+                
+                try {
+                    const response = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password })
+                    })
+                    
+                    const data = await response.json()
+                    
+                    if (data.success) {
+                        window.location.href = '/admin'
+                    } else {
+                        errorDiv.classList.remove('hidden')
+                        errorText.textContent = data.error || '로그인에 실패했습니다.'
+                    }
+                } catch (error) {
+                    errorDiv.classList.remove('hidden')
+                    errorText.textContent = '서버 오류가 발생했습니다.'
+                }
+            })
+        </script>
+    </body>
+    </html>
+  `)
+})
+
+// 로그인 API
+app.post('/api/admin/login', async (c) => {
+  try {
+    const { password } = await c.req.json()
+    const adminPassword = c.env.ADMIN_PASSWORD || 'gdax2026!'
+    
+    if (password === adminPassword) {
+      // 세션 쿠키 설정 (7일간 유효)
+      setCookie(c, 'admin_session', `admin_${adminPassword}`, {
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict',
+        path: '/'
+      })
+      
+      return c.json({ success: true, message: '로그인 성공' })
+    } else {
+      return c.json({ success: false, error: '비밀번호가 올바르지 않습니다.' }, 401)
+    }
+  } catch (error: unknown) {
+    return c.json({ 
+      success: false, 
+      error: '로그인 처리 중 오류가 발생했습니다.',
+      details: error instanceof Error ? error.message : String(error)
+    }, 500)
+  }
+})
+
+// 로그아웃 API
+app.post('/api/admin/logout', (c) => {
+  setCookie(c, 'admin_session', '', {
+    maxAge: 0,
+    path: '/'
+  })
+  return c.json({ success: true, message: '로그아웃 되었습니다.' })
+})
+
+// ============================================
+// 관리자 API (인증 필요)
+// ============================================
+
 // 설문 목록 조회 API (관리자용)
-app.get('/api/surveys', async (c) => {
+app.get('/api/surveys', adminAuth, async (c) => {
   try {
     const { results } = await c.env.DB.prepare(`
       SELECT 
@@ -384,7 +537,7 @@ app.get('/api/report/:id', async (c) => {
 })
 
 // 통계 API (관리자용)
-app.get('/api/stats', async (c) => {
+app.get('/api/stats', adminAuth, async (c) => {
   try {
     const totalResult = await c.env.DB.prepare(`
       SELECT COUNT(*) as total FROM survey_responses
@@ -412,8 +565,77 @@ app.get('/api/stats', async (c) => {
   }
 })
 
+
+// Excel 내보내기 API (관리자용)
+app.get('/api/export/excel', adminAuth, async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(`
+      SELECT * FROM survey_responses ORDER BY created_at DESC
+    `).all()
+
+    // CSV 형식으로 데이터 생성 (Excel에서 열 수 있음)
+    const headers = [
+      'ID', '회사명', '대표자명', '소재지', '주생산품', '상시근로자수', '지난해매출액',
+      '탄소리스크1', '탄소리스크2', '탄소리스크3',
+      '디지털시급성1', '디지털시급성2', '디지털시급성3',
+      '고용현황1', '고용현황2', '고용현황3', '고용현황4',
+      '전환준비도', '지원분야', '컨설팅신청', 
+      '담당자명', '담당자직함', '담당자이메일', '담당자전화번호',
+      '리포트발송여부', '생성일시'
+    ]
+
+    const rows = results.map((survey: any) => [
+      survey.id,
+      survey.company_name,
+      survey.ceo_name,
+      survey.location,
+      survey.main_product,
+      survey.employee_count,
+      survey.annual_revenue,
+      survey.climate_risk_1,
+      survey.climate_risk_2,
+      survey.climate_risk_3,
+      survey.digital_urgency_1,
+      survey.digital_urgency_2,
+      survey.digital_urgency_3,
+      survey.employment_status_1,
+      survey.employment_status_2,
+      survey.employment_status_3,
+      survey.employment_status_4,
+      survey.readiness_level,
+      survey.support_areas,
+      survey.consulting_application === 1 ? '네' : '아니오',
+      survey.contact_name,
+      survey.contact_position,
+      survey.contact_email,
+      survey.contact_phone,
+      survey.report_sent === 1 ? '발송완료' : '미발송',
+      survey.created_at
+    ])
+
+    // CSV 생성 (BOM 추가로 한글 깨짐 방지)
+    const BOM = '\uFEFF'
+    const csvContent = BOM + [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${String(cell || '').replace(/"/g, '""')}"`).join(','))
+    ].join('\n')
+
+    return new Response(csvContent, {
+      headers: {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="G-DAX_설문조사_${new Date().toISOString().split('T')[0]}.csv"`
+      }
+    })
+  } catch (error: unknown) {
+    return c.json({ 
+      error: 'Excel 내보내기 중 오류가 발생했습니다.',
+      details: error instanceof Error ? error.message : String(error)
+    }, 500)
+  }
+})
+
 // 이메일 발송 API (관리자용 - 수동 재발송)
-app.post('/api/send-email/:id', async (c) => {
+app.post('/api/send-email/:id', adminAuth, async (c) => {
   try {
     const id = c.req.param('id')
     
@@ -701,7 +923,7 @@ app.get('/', (c) => {
 })
 
 // 관리자 대시보드
-app.get('/admin', (c) => {
+app.get('/admin', adminAuth, (c) => {
   return c.html(`
     <!DOCTYPE html>
     <html lang="ko">
@@ -719,10 +941,20 @@ app.get('/admin', (c) => {
         <div class="min-h-screen py-8 px-4">
             <div class="max-w-7xl mx-auto">
                 <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800 mb-6">
-                        <i class="fas fa-chart-line mr-2 text-blue-600"></i>
-                        관리자 대시보드
-                    </h1>
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-3xl font-bold text-gray-800">
+                            <i class="fas fa-chart-line mr-2 text-blue-600"></i>
+                            관리자 대시보드
+                        </h1>
+                        <div class="flex gap-3">
+                            <button onclick="exportToExcel()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                                <i class="fas fa-file-excel mr-2"></i>Excel 내보내기
+                            </button>
+                            <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                                <i class="fas fa-sign-out-alt mr-2"></i>로그아웃
+                            </button>
+                        </div>
+                    </div>
                     
                     <!-- 통계 카드 -->
                     <div id="statsCards" class="grid md:grid-cols-3 gap-6 mb-8"></div>

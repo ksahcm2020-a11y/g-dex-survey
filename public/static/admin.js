@@ -1,5 +1,21 @@
 // 관리자 대시보드 JavaScript
 
+// 로그아웃 함수
+async function logout() {
+  try {
+    await axios.post('/api/admin/logout');
+    window.location.href = '/admin/login';
+  } catch (error) {
+    console.error('Logout error:', error);
+    alert('로그아웃 중 오류가 발생했습니다.');
+  }
+}
+
+// Excel 내보내기 함수
+function exportToExcel() {
+  window.location.href = '/api/export/excel';
+}
+
 async function loadStats() {
   try {
     const response = await axios.get('/api/stats');
