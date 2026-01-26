@@ -15,14 +15,17 @@
 - ✅ 고용 이슈 동적 분석 (설문 9번 기반)
 - ✅ 시각화 차트 (4분면 매트릭스)
 - ✅ **이메일 자동 발송** (Resend API - 리포트 링크 포함)
+- ✅ **관리자 인증** (비밀번호 로그인, 세션 관리)
 - ✅ 관리자 대시보드 (고객 DB 조회, 통계, 이메일 재발송)
+- ✅ **Excel 내보내기** (CSV 형식, UTF-8 BOM)
 - ✅ 리포트 인쇄 기능 (PDF 저장)
 
 ## 🌐 URL
 
 ### 샌드박스 개발 서버
 - **메인 페이지 (설문조사)**: https://3000-iidpghw09cie87fc4o7jc-0e616f0a.sandbox.novita.ai/
-- **관리자 대시보드**: https://3000-iidpghw09cie87fc4o7jc-0e616f0a.sandbox.novita.ai/admin
+- **관리자 로그인**: https://3000-iidpghw09cie87fc4o7jc-0e616f0a.sandbox.novita.ai/admin/login
+- **관리자 대시보드**: https://3000-iidpghw09cie87fc4o7jc-0e616f0a.sandbox.novita.ai/admin (비밀번호: `gdax2026!`)
 - **API 엔드포인트**: https://3000-iidpghw09cie87fc4o7jc-0e616f0a.sandbox.novita.ai/api/*
 
 ### 프로덕션 배포
@@ -193,8 +196,13 @@ if (employment_status_4 >= 4) {
 
 ### 2. 관리자
 
+#### 로그인
+- URL: `/admin/login`
+- 기본 비밀번호: `gdax2026!`
+- 세션 유효기간: 7일
+
 #### 대시보드 접근
-- URL: `/admin`
+- URL: `/admin` (인증 필요)
 - 기능:
   - 전체 설문 응답 수 조회
   - 컨설팅 신청 건수 확인
@@ -202,6 +210,8 @@ if (employment_status_4 >= 4) {
   - 설문 응답 목록 조회
   - 개별 응답 상세 정보 확인
   - 리포트 바로 보기
+  - **Excel 내보내기** (CSV 형식, 한글 지원)
+  - **로그아웃**
 
 ## 🛠️ 기술 스택
 
@@ -261,10 +271,11 @@ npm run db:migrate:local
 # 3. (선택) 테스트 데이터 삽입
 npm run db:seed
 
-# 4. 이메일 발송 기능 설정 (선택)
-# .dev.vars 파일 수정
+# 4. 환경 변수 설정
+# .dev.vars 파일에 다음 내용 추가:
 # RESEND_API_KEY=re_your_api_key_here
 # BASE_URL=http://localhost:3000
+# ADMIN_PASSWORD=gdax2026!
 # 자세한 내용은 EMAIL_SETUP.md 참고
 
 # 5. 빌드
@@ -318,13 +329,55 @@ npm run deploy:prod
    - 전문적인 HTML 이메일 템플릿
    - 리포트 링크 포함
    - 관리자 대시보드에서 수동 재발송 기능
-7. ✅ 관리자 대시보드
+7. ✅ **관리자 인증 시스템**
+   - 비밀번호 로그인 페이지
+   - 쿠키 기반 세션 관리 (7일간 유효)
+   - 로그아웃 기능
+   - 모든 관리자 API 보호
+8. ✅ 관리자 대시보드
    - 통계 카드 (전체 응답, 컨설팅 신청, 발송 건수)
    - 설문 응답 목록
    - 상세 정보 모달
    - 이메일 발송/재발송 버튼
-8. ✅ 고객 DB 구축 (D1 데이터베이스)
-9. ✅ Git 버전 관리
+   - **Excel 내보내기** (CSV, UTF-8 BOM)
+9. ✅ 고객 DB 구축 (D1 데이터베이스)
+10. ✅ Git 버전 관리
+
+### 🔐 관리자 인증 기능
+
+**로그인**:
+- URL: `/admin/login`
+- 기본 비밀번호: `gdax2026!`
+- 환경 변수로 변경 가능: `ADMIN_PASSWORD`
+
+**세션 관리**:
+- 쿠키 기반 세션 (HttpOnly, Secure, SameSite)
+- 유효기간: 7일
+- 자동 로그아웃: 세션 만료 또는 수동 로그아웃
+
+**보호되는 경로**:
+- `/admin` - 관리자 대시보드
+- `/api/surveys` - 설문 목록 조회
+- `/api/stats` - 통계 조회
+- `/api/send-email/:id` - 이메일 발송
+- `/api/export/excel` - Excel 내보내기
+
+### 📊 Excel 내보내기 기능
+
+**내보내기 형식**:
+- CSV 형식 (Excel에서 직접 열기 가능)
+- UTF-8 BOM 인코딩 (한글 깨짐 방지)
+- 파일명: `G-DAX_설문조사_YYYY-MM-DD.csv`
+
+**포함 데이터** (26개 컬럼):
+- 기본 정보: ID, 회사명, 대표자명, 소재지, 주생산품, 상시근로자수, 지난해매출액
+- 설문 응답: 탄소리스크(1-3), 디지털시급성(1-3), 고용현황(1-4), 전환준비도
+- 메타 정보: 지원분야, 컨설팅신청, 담당자정보, 리포트발송여부, 생성일시
+
+**사용 방법**:
+1. 관리자 대시보드 로그인
+2. 우측 상단 "Excel 내보내기" 버튼 클릭
+3. 자동 다운로드 (브라우저 기본 다운로드 폴더)
 
 ### 📧 이메일 발송 기능
 
@@ -354,18 +407,23 @@ npm run deploy:prod
 
 ### ⏳ 향후 구현 예정 기능
 
-**추가 기능**
-- Excel 내보내기
+**추가 기능 (선택)**
+- ~~Excel 내보내기~~ ✅ 완료
 - 고급 필터링 및 검색
 - 대시보드 차트 추가
 - 커스텀 도메인 이메일 발송
 
 ## 🔑 API 엔드포인트
 
+### 인증 관련
+- `GET /admin/login` - 관리자 로그인 페이지
+- `POST /api/admin/login` - 로그인 API
+- `POST /api/admin/logout` - 로그아웃 API
+
 ### 설문 관련
 - `POST /api/survey` - 설문 제출
 - `GET /api/survey/:id` - 설문 조회 (단일)
-- `GET /api/surveys` - 설문 목록 조회 (관리자)
+- `GET /api/surveys` - 설문 목록 조회 (관리자, 인증 필요)
 
 ### 리포트 관련
 - `GET /api/report/:id` - **G-DAX 진단 리포트 생성 및 조회**
@@ -374,17 +432,23 @@ npm run deploy:prod
   - 고용 이슈 동적 분석
 
 ### 이메일 관련
-- `POST /api/send-email/:id` - **이메일 발송/재발송** (관리자용)
+- `POST /api/send-email/:id` - **이메일 발송/재발송** (관리자, 인증 필요)
   - 설문 ID 기반 리포트 이메일 발송
   - 진단 타입 자동 계산 포함
   - 고용 이슈 동적 분석
 
 ### 통계 관련
-- `GET /api/stats` - 통계 데이터 조회
+- `GET /api/stats` - 통계 데이터 조회 (관리자, 인증 필요)
+
+### Excel 내보내기
+- `GET /api/export/excel` - **Excel 내보내기** (관리자, 인증 필요)
+  - CSV 형식, UTF-8 BOM
+  - 전체 설문 데이터
 
 ### 웹 페이지
 - `GET /` - 설문조사 폼
-- `GET /admin` - 관리자 대시보드
+- `GET /admin/login` - 관리자 로그인
+- `GET /admin` - 관리자 대시보드 (인증 필요)
 - `GET /report/:id` - G-DAX 진단 리포트 페이지
 
 ## 📝 개발 스크립트
