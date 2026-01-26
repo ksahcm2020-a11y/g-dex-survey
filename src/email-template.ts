@@ -40,11 +40,11 @@ export function generateReportEmailHTML(data: {
               
               <!-- Greeting -->
               <p style="font-size: 16px; color: #1f2937; line-height: 1.6; margin: 0 0 20px 0;">
-                <strong>${companyName}</strong> ${ceoName} 님 귀중
+                <strong>${data.companyName}</strong> ${data.ceoName} 님 귀중
               </p>
 
               <p style="font-size: 15px; color: #4b5563; line-height: 1.8; margin: 0 0 30px 0;">
-                안녕하세요, ${contactName} 님.<br>
+                안녕하세요, ${data.contactName} 님.<br>
                 귀사의 G-DAX 산업·일자리 전환 진단이 완료되었습니다.
               </p>
 
@@ -56,10 +56,10 @@ export function generateReportEmailHTML(data: {
                       📊 진단 결과
                     </h2>
                     <p style="color: #1f2937; font-size: 15px; margin: 0 0 10px 0; line-height: 1.6;">
-                      <strong>진단 유형:</strong> ${diagnosisType}
+                      <strong>진단 유형:</strong> ${data.diagnosisType}
                     </p>
                     <p style="color: #1f2937; font-size: 15px; margin: 0; line-height: 1.6;">
-                      <strong>진단일:</strong> ${diagnosisDate}
+                      <strong>진단일:</strong> ${data.diagnosisDate}
                     </p>
                   </td>
                 </tr>
@@ -139,7 +139,7 @@ export function generateReportEmailText(data: {
   return `
 G-DAX 산업·일자리 전환 진단 리포트
 
-${companyName} ${ceoName} 님 귀중
+${data.companyName} ${data.ceoName} 님 귀중
 
 안녕하세요, ${data.contactName} 님.
 귀사의 G-DAX 산업·일자리 전환 진단이 완료되었습니다.
