@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "dev:sandbox": "wrangler pages dev dist --d1=webapp-production --local --ip 0.0.0.0 --port 3000",
-    "build": "vite build",
+    "build": "vite build && cp public/_routes.json dist/_routes.json",
     "preview": "wrangler pages dev dist",
     "deploy": "echo 'Cloudflare Pages auto-deploy enabled'",
     "deploy:prod": "echo 'Cloudflare Pages auto-deploy enabled'",
