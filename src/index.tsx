@@ -1049,4 +1049,15 @@ app.get('/report/:id', (c) => {
   `)
 })
 
+// 디버그: 환경 변수 확인 (임시, 배포 후 삭제 예정)
+app.get('/api/debug/env', (c) => {
+  return c.json({
+    hasResendKey: !!c.env.RESEND_API_KEY,
+    hasBaseUrl: !!c.env.BASE_URL,
+    hasAdminPassword: !!c.env.ADMIN_PASSWORD,
+    baseUrl: c.env.BASE_URL || 'NOT_SET',
+    resendKeyLength: c.env.RESEND_API_KEY ? c.env.RESEND_API_KEY.length : 0
+  })
+})
+
 export default app
