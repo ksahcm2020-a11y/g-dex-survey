@@ -10,6 +10,88 @@ type Bindings = {
   RESEND_API_KEY: string;
   BASE_URL: string;
   ADMIN_PASSWORD: string;
+  GMAIL_USER: string;
+  GMAIL_APP_PASSWORD: string;
+}
+
+// Gmail SMTP 이메일 발송 함수
+async function sendEmailViaGmail(
+  to: string,
+  subject: string,
+  html: string,
+  text: string,
+  gmailUser: string,
+  gmailPassword: string
+) {
+  const boundary = `----=_Part_${Date.now()}_${Math.random().toString(36).substring(2)}`
+  
+  const emailBody = [
+    `From: G-DAX 진단시스템 <${gmailUser}>`,
+    `To: ${to}`,
+    `Subject: ${subject}`,
+    `MIME-Version: 1.0`,
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+    ``,
+    `--${boundary}`,
+    `Content-Type: text/plain; charset=UTF-8`,
+    `Content-Transfer-Encoding: 8bit`,
+    ``,
+    text,
+    ``,
+    `--${boundary}`,
+    `Content-Type: text/html; charset=UTF-8`,
+    `Content-Transfer-Encoding: 8bit`,
+    ``,
+    html,
+    ``,
+    `--${boundary}--`
+  ].join('\r\n')
+
+  const auth = btoa(`${gmailUser}:${gmailPassword}`)
+  
+  const response = await fetch('https://smtp-relay.gmail.com/v1/messages/send', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${auth}`,
+      'Content-Type': 'message/rfc822'
+    },
+    body: emailBody
+  })
+
+  if (!response.ok) {
+    // Gmail API 방식으로 재시도
+    const message = [
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      `Content-Type: text/html; charset=utf-8`,
+      ``,
+      html
+    ].join('\r\n')
+    
+    const encodedMessage = btoa(unescape(encodeURIComponent(message)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '')
+
+    const gmailResponse = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${gmailPassword}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        raw: encodedMessage
+      })
+    })
+
+    if (!gmailResponse.ok) {
+      throw new Error(`Gmail API failed: ${await gmailResponse.text()}`)
+    }
+    
+    return await gmailResponse.json()
+  }
+
+  return { success: true }
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -88,9 +170,7 @@ app.post('/api/survey', async (c) => {
 
     // 이메일 자동 발송 (비동기 - 블로킹하지 않음)
     try {
-      if (c.env.RESEND_API_KEY && c.env.BASE_URL) {
-        const resend = new Resend(c.env.RESEND_API_KEY)
-        
+      if (c.env.BASE_URL && (c.env.GMAIL_USER || c.env.RESEND_API_KEY)) {
         // 리포트 URL 생성
         const reportUrl = `${c.env.BASE_URL}/report/${surveyId}`
         
@@ -101,28 +181,46 @@ app.post('/api/survey', async (c) => {
           day: '2-digit' 
         }).replace(/\. /g, '.')
 
-        // 이메일 발송
-        await resend.emails.send({
-          from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
-          to: [data.contact_email],
-          subject: `[G-DAX] ${data.company_name} 산업전환 진단 리포트가 완성되었습니다`,
-          html: generateReportEmailHTML({
-            companyName: data.company_name,
-            ceoName: data.ceo_name,
-            contactName: data.contact_name,
-            reportUrl: reportUrl,
-            diagnosisType: '진단 완료', // 실제 타입은 리포트 생성 시 결정됨
-            diagnosisDate: diagnosisDate
-          }),
-          text: generateReportEmailText({
-            companyName: data.company_name,
-            ceoName: data.ceo_name,
-            contactName: data.contact_name,
-            reportUrl: reportUrl,
-            diagnosisType: '진단 완료',
-            diagnosisDate: diagnosisDate
-          })
+        const emailSubject = `[G-DAX] ${data.company_name} 산업전환 진단 리포트가 완성되었습니다`
+        const emailHTML = generateReportEmailHTML({
+          companyName: data.company_name,
+          ceoName: data.ceo_name,
+          contactName: data.contact_name,
+          reportUrl: reportUrl,
+          diagnosisType: '진단 완료',
+          diagnosisDate: diagnosisDate
         })
+        const emailText = generateReportEmailText({
+          companyName: data.company_name,
+          ceoName: data.ceo_name,
+          contactName: data.contact_name,
+          reportUrl: reportUrl,
+          diagnosisType: '진단 완료',
+          diagnosisDate: diagnosisDate
+        })
+
+        // Gmail SMTP 우선 사용, 없으면 Resend 사용
+        if (c.env.GMAIL_USER && c.env.GMAIL_APP_PASSWORD) {
+          await sendEmailViaGmail(
+            data.contact_email,
+            emailSubject,
+            emailHTML,
+            emailText,
+            c.env.GMAIL_USER,
+            c.env.GMAIL_APP_PASSWORD
+          )
+          console.log(`Email sent via Gmail to ${data.contact_email}`)
+        } else if (c.env.RESEND_API_KEY) {
+          const resend = new Resend(c.env.RESEND_API_KEY)
+          await resend.emails.send({
+            from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
+            to: [data.contact_email],
+            subject: emailSubject,
+            html: emailHTML,
+            text: emailText
+          })
+          console.log(`Email sent via Resend to ${data.contact_email}`)
+        }
 
         // 이메일 발송 상태 업데이트
         await c.env.DB.prepare(`
@@ -649,10 +747,10 @@ app.post('/api/send-email/:id', adminAuth, async (c) => {
     }
 
     // API 키 확인
-    if (!c.env.RESEND_API_KEY || !c.env.BASE_URL) {
+    if (!c.env.BASE_URL || (!c.env.GMAIL_USER && !c.env.RESEND_API_KEY)) {
       return c.json({ 
-        error: 'RESEND_API_KEY 또는 BASE_URL이 설정되지 않았습니다.',
-        details: 'Resend API 키를 설정해주세요. README의 환경 설정 가이드를 참고하세요.'
+        error: 'BASE_URL 또는 이메일 설정이 되지 않았습니다.',
+        details: 'Gmail 또는 Resend API 키를 설정해주세요.'
       }, 500)
     }
 
@@ -673,7 +771,6 @@ app.post('/api/send-email/:id', adminAuth, async (c) => {
       diagnosisType = 'Type IV. 안정 유지형'
     }
 
-    const resend = new Resend(c.env.RESEND_API_KEY)
     const reportUrl = `${c.env.BASE_URL}/report/${id}`
     const diagnosisDate = new Date(survey.created_at).toLocaleDateString('ko-KR', { 
       year: 'numeric', 
@@ -681,28 +778,45 @@ app.post('/api/send-email/:id', adminAuth, async (c) => {
       day: '2-digit' 
     }).replace(/\. /g, '.')
 
-    // 이메일 발송
-    const emailResult = await resend.emails.send({
-      from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
-      to: [survey.contact_email],
-      subject: `[G-DAX] ${survey.company_name} 산업전환 진단 리포트가 완성되었습니다`,
-      html: generateReportEmailHTML({
-        companyName: survey.company_name,
-        ceoName: survey.ceo_name,
-        contactName: survey.contact_name,
-        reportUrl: reportUrl,
-        diagnosisType: diagnosisType,
-        diagnosisDate: diagnosisDate
-      }),
-      text: generateReportEmailText({
-        companyName: survey.company_name,
-        ceoName: survey.ceo_name,
-        contactName: survey.contact_name,
-        reportUrl: reportUrl,
-        diagnosisType: diagnosisType,
-        diagnosisDate: diagnosisDate
-      })
+    const emailSubject = `[G-DAX] ${survey.company_name} 산업전환 진단 리포트가 완성되었습니다`
+    const emailHTML = generateReportEmailHTML({
+      companyName: survey.company_name,
+      ceoName: survey.ceo_name,
+      contactName: survey.contact_name,
+      reportUrl: reportUrl,
+      diagnosisType: diagnosisType,
+      diagnosisDate: diagnosisDate
     })
+    const emailText = generateReportEmailText({
+      companyName: survey.company_name,
+      ceoName: survey.ceo_name,
+      contactName: survey.contact_name,
+      reportUrl: reportUrl,
+      diagnosisType: diagnosisType,
+      diagnosisDate: diagnosisDate
+    })
+
+    // Gmail SMTP 우선 사용, 없으면 Resend 사용
+    let emailResult: any = { success: true }
+    if (c.env.GMAIL_USER && c.env.GMAIL_APP_PASSWORD) {
+      await sendEmailViaGmail(
+        survey.contact_email,
+        emailSubject,
+        emailHTML,
+        emailText,
+        c.env.GMAIL_USER,
+        c.env.GMAIL_APP_PASSWORD
+      )
+    } else if (c.env.RESEND_API_KEY) {
+      const resend = new Resend(c.env.RESEND_API_KEY)
+      emailResult = await resend.emails.send({
+        from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
+        to: [survey.contact_email],
+        subject: emailSubject,
+        html: emailHTML,
+        text: emailText
+      })
+    }
 
     // 이메일 발송 상태 업데이트
     await c.env.DB.prepare(`
@@ -713,7 +827,7 @@ app.post('/api/send-email/:id', adminAuth, async (c) => {
       success: true,
       message: '이메일이 성공적으로 발송되었습니다.',
       email: survey.contact_email,
-      email_id: emailResult.data?.id
+      email_id: emailResult.data?.id || 'gmail'
     })
   } catch (error: unknown) {
     console.error('Email sending error:', error)
@@ -1053,10 +1167,13 @@ app.get('/report/:id', (c) => {
 app.get('/api/debug/env', (c) => {
   return c.json({
     hasResendKey: !!c.env.RESEND_API_KEY,
+    hasGmailUser: !!c.env.GMAIL_USER,
+    hasGmailPassword: !!c.env.GMAIL_APP_PASSWORD,
     hasBaseUrl: !!c.env.BASE_URL,
     hasAdminPassword: !!c.env.ADMIN_PASSWORD,
     baseUrl: c.env.BASE_URL || 'NOT_SET',
-    resendKeyLength: c.env.RESEND_API_KEY ? c.env.RESEND_API_KEY.length : 0
+    gmailUser: c.env.GMAIL_USER || 'NOT_SET',
+    emailMethod: c.env.GMAIL_USER ? 'Gmail' : (c.env.RESEND_API_KEY ? 'Resend' : 'NONE')
   })
 })
 
