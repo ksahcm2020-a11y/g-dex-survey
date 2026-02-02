@@ -113,6 +113,11 @@ async function loadSurveys() {
               title="이메일 ${survey.report_sent ? '재' : ''}발송">
               <i class="fas fa-envelope mr-1"></i>${survey.report_sent ? '재발송' : '발송'}
             </button>
+            <button onclick="deleteSurvey(${survey.id}, '${survey.company_name}')" 
+              class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-xs"
+              title="설문 삭제">
+              <i class="fas fa-trash mr-1"></i>삭제
+            </button>
           </div>
         </td>
       </tr>
@@ -133,6 +138,48 @@ async function loadSurveys() {
 
 function viewReport(surveyId) {
   window.open(`/report/${surveyId}`, '_blank');
+}
+
+// 설문 삭제 함수
+async function deleteSurvey(surveyId, companyName) {
+  if (!confirm(`정말로 "${companyName}"의 설문 데이터를 삭제하시겠습니까?\n\n⚠️ 이 작업은 되돌릴 수 없습니다.`)) {
+    return;
+  }
+
+  // 최종 확인
+  if (!confirm(`최종 확인: "${companyName}"의 데이터를 영구적으로 삭제합니다.`)) {
+    return;
+  }
+
+  const button = event.target.closest('button');
+  const originalHTML = button.innerHTML;
+  button.disabled = true;
+  button.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>삭제중...';
+
+  try {
+    const response = await axios.delete(`/api/survey/${surveyId}`);
+    
+    if (response.data.success) {
+      alert('설문이 성공적으로 삭제되었습니다.');
+      // 통계 및 목록 새로고침
+      loadStats();
+      loadSurveys();
+    }
+  } catch (error) {
+    console.error('Survey delete error:', error);
+    
+    let errorMessage = '설문 삭제 중 오류가 발생했습니다.';
+    if (error.response?.data?.error) {
+      errorMessage += '\n\n' + error.response.data.error;
+      if (error.response.data.details) {
+        errorMessage += '\n\n상세: ' + error.response.data.details;
+      }
+    }
+    
+    alert(errorMessage);
+    button.disabled = false;
+    button.innerHTML = originalHTML;
+  }
 }
 
 async function sendEmail(surveyId, email) {

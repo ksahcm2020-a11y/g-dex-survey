@@ -436,6 +436,40 @@ app.get('/api/surveys', adminAuth, async (c) => {
   }
 })
 
+// 설문 삭제 API
+app.delete('/api/survey/:id', adminAuth, async (c) => {
+  try {
+    const id = c.req.param('id')
+    
+    // 설문 존재 확인
+    const survey = await c.env.DB.prepare(`
+      SELECT id, company_name FROM survey_responses WHERE id = ?
+    `).bind(id).first() as any
+
+    if (!survey) {
+      return c.json({ error: '설문을 찾을 수 없습니다.' }, 404)
+    }
+
+    // 설문 삭제
+    await c.env.DB.prepare(`
+      DELETE FROM survey_responses WHERE id = ?
+    `).bind(id).run()
+
+    return c.json({ 
+      success: true,
+      message: '설문이 성공적으로 삭제되었습니다.',
+      deleted_id: id,
+      company_name: survey.company_name
+    })
+  } catch (error: unknown) {
+    console.error('Survey delete error:', error)
+    return c.json({ 
+      error: '설문 삭제 중 오류가 발생했습니다.',
+      details: error instanceof Error ? error.message : String(error)
+    }, 500)
+  }
+})
+
 // 리포트 생성 API
 app.get('/api/report/:id', async (c) => {
   try {
@@ -833,6 +867,77 @@ app.post('/api/send-email/:id', adminAuth, async (c) => {
     console.error('Email sending error:', error)
     return c.json({ 
       error: '이메일 발송 중 오류가 발생했습니다.',
+      details: error instanceof Error ? error.message : String(error)
+    }, 500)
+  }
+})
+
+// 설문 삭제 API (관리자 전용)
+app.delete('/api/survey/:id', adminAuth, async (c) => {
+  try {
+    const id = c.req.param('id')
+    
+    // 설문 존재 확인
+    const survey = await c.env.DB.prepare(`
+      SELECT id, company_name FROM survey_responses WHERE id = ?
+    `).bind(id).first()
+
+    if (!survey) {
+      return c.json({ error: '설문을 찾을 수 없습니다.' }, 404)
+    }
+
+    // 설문 삭제
+    await c.env.DB.prepare(`
+      DELETE FROM survey_responses WHERE id = ?
+    `).bind(id).run()
+
+    return c.json({ 
+      success: true,
+      message: '설문이 성공적으로 삭제되었습니다.',
+      deleted_id: id,
+      company_name: survey.company_name
+    })
+  } catch (error: unknown) {
+    console.error('Survey deletion error:', error)
+    return c.json({ 
+      error: '설문 삭제 중 오류가 발생했습니다.',
+      details: error instanceof Error ? error.message : String(error)
+    }, 500)
+  }
+})
+
+// 여러 설문 일괄 삭제 API (관리자 전용)
+app.post('/api/surveys/delete-batch', adminAuth, async (c) => {
+  try {
+    const { ids } = await c.req.json()
+    
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return c.json({ error: '삭제할 설문 ID를 제공해주세요.' }, 400)
+    }
+
+    // 플레이스홀더 생성
+    const placeholders = ids.map(() => '?').join(',')
+    
+    // 삭제 전 개수 확인
+    const countResult = await c.env.DB.prepare(`
+      SELECT COUNT(*) as count FROM survey_responses WHERE id IN (${placeholders})
+    `).bind(...ids).first() as any
+
+    // 일괄 삭제
+    await c.env.DB.prepare(`
+      DELETE FROM survey_responses WHERE id IN (${placeholders})
+    `).bind(...ids).run()
+
+    return c.json({ 
+      success: true,
+      message: `${countResult.count}개의 설문이 성공적으로 삭제되었습니다.`,
+      deleted_count: countResult.count,
+      deleted_ids: ids
+    })
+  } catch (error: unknown) {
+    console.error('Batch deletion error:', error)
+    return c.json({ 
+      error: '일괄 삭제 중 오류가 발생했습니다.',
       details: error instanceof Error ? error.message : String(error)
     }, 500)
   }
