@@ -1033,6 +1033,169 @@ app.get('/', (c) => {
             </div>
         </section>
 
+        <!-- Latest News & Resources Section -->
+        <section class="py-24 bg-gradient-to-b from-white to-blue-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 animate-fade-in-up">
+                    <h3 class="text-4xl font-bold text-gray-900 mb-4">
+                        <i class="fas fa-newspaper text-blue-600 mr-3"></i>
+                        산업전환 지원사업 최신 소식
+                    </h3>
+                    <p class="text-gray-600 text-lg">2026년 고용노동부·중소벤처기업부 주요 지원사업</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    <!-- 정규직 전환 지원 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border-t-4 border-blue-600">
+                        <div class="bg-blue-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-user-tie text-3xl text-blue-600"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-gray-900">정규직 전환 지원금</h4>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            비정규직을 정규직으로 전환 시 1인당 월 최대 <span class="font-bold text-blue-600">60만원</span> 지원 (최대 1년)
+                        </p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                            <p class="text-sm text-gray-700">
+                                <i class="fas fa-check-circle text-blue-600 mr-2"></i>
+                                기본 40만원 + 임금 20만원 이상 인상 시 20만원 추가
+                            </p>
+                        </div>
+                        <a href="https://www.moel.go.kr/" target="_blank" class="text-blue-600 hover:text-blue-800 font-semibold text-sm inline-flex items-center">
+                            자세히 보기 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- 탄소중립 사업화 지원 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border-t-4 border-green-600">
+                        <div class="bg-green-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-leaf text-3xl text-green-600"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-gray-900">탄소중립 사업화 지원</h4>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            기후테크 등 탄소중립 혁신 중소기업의 핵심기술 사업화 및 실증 지원
+                        </p>
+                        <div class="bg-green-50 p-4 rounded-lg mb-4">
+                            <p class="text-sm text-gray-700">
+                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                기술사업화·현장실증·투자연계 3개 유형 지원
+                            </p>
+                        </div>
+                        <a href="https://www.mss.go.kr/" target="_blank" class="text-green-600 hover:text-green-800 font-semibold text-sm inline-flex items-center">
+                            자세히 보기 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- 사업재편 지원 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border-t-4 border-purple-600">
+                        <div class="bg-purple-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-sync-alt text-3xl text-purple-600"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-gray-900">사업재편 지원</h4>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            산업구조 변화에 대응하는 중소기업의 사업재편 및 직무전환 컨설팅 지원
+                        </p>
+                        <div class="bg-purple-50 p-4 rounded-lg mb-4">
+                            <p class="text-sm text-gray-700">
+                                <i class="fas fa-check-circle text-purple-600 mr-2"></i>
+                                경영혁신·인력재배치·교육훈련 통합 지원
+                            </p>
+                        </div>
+                        <a href="https://www.bizinfo.go.kr/" target="_blank" class="text-purple-600 hover:text-purple-800 font-semibold text-sm inline-flex items-center">
+                            자세히 보기 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- 중소기업 혁신바우처 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border-t-4 border-orange-600">
+                        <div class="bg-orange-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-ticket-alt text-3xl text-orange-600"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-gray-900">중소기업 혁신바우처</h4>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            탄소중립·디지털 전환을 위한 경영혁신 컨설팅 및 기술지원 서비스 제공
+                        </p>
+                        <div class="bg-orange-50 p-4 rounded-lg mb-4">
+                            <p class="text-sm text-gray-700">
+                                <i class="fas fa-check-circle text-orange-600 mr-2"></i>
+                                탄소중립 경영혁신·중대재해예방 지원
+                            </p>
+                        </div>
+                        <a href="https://www.korsca.kr/" target="_blank" class="text-orange-600 hover:text-orange-800 font-semibold text-sm inline-flex items-center">
+                            자세히 보기 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- 디지털전환 지원 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border-t-4 border-indigo-600">
+                        <div class="bg-indigo-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-microchip text-3xl text-indigo-600"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-gray-900">디지털전환 바우처</h4>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            스마트공장·AI·빅데이터 등 디지털 신기술 도입을 위한 자금 지원
+                        </p>
+                        <div class="bg-indigo-50 p-4 rounded-lg mb-4">
+                            <p class="text-sm text-gray-700">
+                                <i class="fas fa-check-circle text-indigo-600 mr-2"></i>
+                                최대 2억원 지원 (정부 50% + 기업 50%)
+                            </p>
+                        </div>
+                        <a href="https://www.k-smartfactory.kr/" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-semibold text-sm inline-flex items-center">
+                            자세히 보기 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+
+                    <!-- 중소기업 정책자금 -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border-t-4 border-pink-600">
+                        <div class="bg-pink-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-hand-holding-usd text-3xl text-pink-600"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-gray-900">중소기업 정책자금</h4>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            중소기업의 혁신성장을 위한 저금리 융자 및 보증 지원
+                        </p>
+                        <div class="bg-pink-50 p-4 rounded-lg mb-4">
+                            <p class="text-sm text-gray-700">
+                                <i class="fas fa-check-circle text-pink-600 mr-2"></i>
+                                연 2~3% 저금리 융자 최대 30억원
+                            </p>
+                        </div>
+                        <a href="https://www.kosmes.or.kr/" target="_blank" class="text-pink-600 hover:text-pink-800 font-semibold text-sm inline-flex items-center">
+                            자세히 보기 <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Important Notice -->
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-2xl">
+                    <div class="flex items-start gap-6">
+                        <div class="bg-white bg-opacity-20 p-4 rounded-xl backdrop-blur-sm flex-shrink-0">
+                            <i class="fas fa-bullhorn text-4xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-2xl font-bold mb-4">📢 2026년 주요 일정</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-white bg-opacity-10 p-4 rounded-lg backdrop-blur-sm">
+                                    <p class="font-semibold mb-2"><i class="fas fa-calendar-alt mr-2"></i>1분기 (1~3월)</p>
+                                    <p class="text-sm opacity-90">정규직 전환 지원금 신청, 사업재편 지원사업 공고</p>
+                                </div>
+                                <div class="bg-white bg-opacity-10 p-4 rounded-lg backdrop-blur-sm">
+                                    <p class="font-semibold mb-2"><i class="fas fa-calendar-alt mr-2"></i>2분기 (4~6월)</p>
+                                    <p class="text-sm opacity-90">탄소중립 사업화 지원, 혁신바우처 2차 공고</p>
+                                </div>
+                            </div>
+                            <div class="mt-6 bg-white bg-opacity-10 p-4 rounded-lg backdrop-blur-sm">
+                                <p class="text-sm">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    <strong>지원 대상:</strong> 중소기업 (제조업·서비스업), 상시근로자 30인 이상 우대
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- CTA Section -->
         <section class="py-24 gradient-navy-bg text-white relative overflow-hidden">
             <div class="absolute inset-0 bg-black opacity-10"></div>
