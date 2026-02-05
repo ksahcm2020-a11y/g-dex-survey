@@ -856,185 +856,257 @@ app.get('/', (c) => {
         <style>
           body { font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; }
           .gradient-navy-bg { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%); }
-          .gradient-navy-light { background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); }
+          .hero-overlay { background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)); }
           .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
           .card-hover:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
           @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
           @keyframes slideIn { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
           .animate-fade-in-up { animation: fadeInUp 0.8s ease-out; }
           .animate-slide-in { animation: slideIn 0.8s ease-out; }
-          .text-shadow { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
+          .text-shadow { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); }
           .backdrop-blur-sm { backdrop-filter: blur(8px); }
           .navy-btn { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
-          .navy-btn:hover { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); }
+          .navy-btn:hover { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%); transform: scale(1.05); }
         </style>
     </head>
-    <body class="bg-gray-50">
-        <!-- Header -->
-        <header class="gradient-navy-bg text-white py-6 shadow-2xl">
+    <body class="bg-white">
+        <!-- Top Header with Logos -->
+        <header class="bg-white py-8 border-b-2 border-gray-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4 animate-slide-in">
-                        <div class="bg-white bg-opacity-20 p-3 rounded-lg backdrop-blur-sm">
-                            <i class="fas fa-building text-4xl text-white"></i>
-                        </div>
-                        <div>
-                            <h1 class="text-2xl font-bold text-shadow">한국표준협회</h1>
-                            <p class="text-sm opacity-90">산업·일자리전환 지원센터</p>
-                        </div>
-                    </div>
-                    <a href="/admin/login" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg transition backdrop-blur-sm">
-                        <i class="fas fa-user-shield text-xl"></i>
-                        <span class="ml-2 hidden sm:inline">관리자</span>
+                <div class="flex items-center justify-between mb-6">
+                    <div class="text-sm text-gray-600">한국표준협회 | 일자리혁신센터</div>
+                    <a href="/admin/login" class="text-gray-600 hover:text-blue-600 transition">
+                        <i class="fas fa-user-shield text-lg"></i>
                     </a>
+                </div>
+                <div class="text-center">
+                    <h1 class="text-5xl md:text-6xl font-bold text-blue-900 mb-4">
+                        산업일자리전환 지원사업
+                    </h1>
+                    <p class="text-lg text-gray-600">2026년 고용노동부 선정 | 산업일자리전환 전달기관</p>
+                </div>
+                <div class="flex items-center justify-center gap-12 mt-8">
+                    <div class="flex items-center gap-3">
+                        <div class="w-16 h-16 bg-blue-900 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-xs">고용<br/>노동부</span>
+                        </div>
+                        <span class="font-bold text-gray-800">고용노동부</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">KSA</span>
+                        </div>
+                        <span class="font-bold text-gray-800">한국표준협회</span>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Hero Section -->
-        <section class="gradient-navy-bg text-white py-24 relative overflow-hidden">
-            <div class="absolute inset-0 bg-black opacity-10"></div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="text-center animate-fade-in-up">
-                    <div class="inline-block bg-white bg-opacity-20 px-6 py-2 rounded-full mb-6 backdrop-blur-sm">
-                        <span class="text-sm font-semibold">고용노동부 지원사업</span>
-                    </div>
-                    <h2 class="text-5xl md:text-6xl font-bold mb-6 text-shadow leading-tight">
-                        G-DAX 산업전환<br/>준비도 진단 포털
+        <!-- Hero Section: Why Industry Transformation -->
+        <section class="relative py-32 overflow-hidden" style="background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920'); background-size: cover; background-position: center;">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <div class="animate-fade-in-up">
+                    <p class="text-3xl text-white mb-8 opacity-90">50년이 넘는 시간동안</p>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight text-shadow">
+                        인사노무, 제조혁신 등 정부 지원사업을 수행해온 경험으로<br/>
+                        참여기업의 산업전환 대응 역량강화를 지원하겠습니다.
                     </h2>
-                    <p class="text-xl md:text-2xl mb-10 opacity-95 max-w-3xl mx-auto leading-relaxed">
-                        탄소중립·디지털 전환 시대,<br/>
-                        귀사의 경쟁력을 진단하고 맞춤형 솔루션을 제공합니다
+                    <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-8 mt-12 max-w-4xl mx-auto">
+                        <div class="grid md:grid-cols-3 gap-8 text-white">
+                            <div>
+                                <div class="text-5xl font-bold mb-2">50+</div>
+                                <div class="text-lg opacity-90">년 전문 경험</div>
+                            </div>
+                            <div>
+                                <div class="text-5xl font-bold mb-2">1,000+</div>
+                                <div class="text-lg opacity-90">기업 지원 실적</div>
+                            </div>
+                            <div>
+                                <div class="text-5xl font-bold mb-2">100%</div>
+                                <div class="text-lg opacity-90">맞춤형 컨설팅</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Transformation is Needed -->
+        <section class="py-20 bg-gradient-to-b from-white to-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold text-gray-900 mb-4">
+                        <i class="fas fa-exclamation-triangle text-orange-500 mr-3"></i>
+                        왜 산업전환이 필요한가요?
+                    </h3>
+                    <p class="text-gray-600 text-lg">급변하는 산업환경 속에서 기업의 생존과 성장을 위한 필수 과제</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 mb-16">
+                    <div class="bg-white rounded-2xl p-8 shadow-lg border-l-4 border-green-500">
+                        <div class="bg-green-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-leaf text-3xl text-green-600"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold mb-4 text-gray-900">탄소중립 대응</h4>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>2050 탄소중립 목표 달성</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>친환경 생산공정 전환</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span>에너지 효율성 개선</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 shadow-lg border-l-4 border-blue-500">
+                        <div class="bg-blue-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-robot text-3xl text-blue-600"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold mb-4 text-gray-900">디지털 혁신</h4>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                <span>AI·빅데이터 활용</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                <span>스마트공장 구축</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                <span>디지털 업무환경 조성</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-8 shadow-lg border-l-4 border-purple-500">
+                        <div class="bg-purple-100 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-users text-3xl text-purple-600"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold mb-4 text-gray-900">인력 재구조화</h4>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-500 mt-1 mr-2"></i>
+                                <span>직무전환 교육훈련</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-500 mt-1 mr-2"></i>
+                                <span>신기술 인재 확보</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-500 mt-1 mr-2"></i>
+                                <span>고용안정성 제고</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pre-Diagnosis Introduction -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h3 class="text-4xl font-bold text-gray-900 mb-4">
+                        <i class="fas fa-clipboard-check text-blue-600 mr-3"></i>
+                        G-DAX 산업전환 준비도 사전진단
+                    </h3>
+                    <p class="text-gray-600 text-lg">과학적 진단 도구로 귀사의 현재 위치를 파악하세요</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+                    <div>
+                        <h4 class="text-3xl font-bold mb-6 text-gray-900">진단 개요</h4>
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-lg mb-2">4분면 매트릭스 진단</h5>
+                                    <p class="text-gray-600">탄소 리스크와 디지털 시급성을 기반으로 Type I~IV 유형 판정</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-file-alt text-green-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-lg mb-2">맞춤형 리포트 제공</h5>
+                                    <p class="text-gray-600">환경·디지털·고용 이슈 분석 및 단계별 솔루션 제시</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="bg-purple-100 w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-envelope text-purple-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-lg mb-2">이메일 자동 발송</h5>
+                                    <p class="text-gray-600">설문 완료 즉시 담당자 이메일로 상세 리포트 전송</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8">
+                        <h4 class="text-2xl font-bold mb-6 text-gray-900">진단 프로세스</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">1</div>
+                                <div>
+                                    <h5 class="font-bold">설문 응답 (10분)</h5>
+                                    <p class="text-sm text-gray-600">15개 문항에 대한 5점 척도 평가</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">2</div>
+                                <div>
+                                    <h5 class="font-bold">AI 분석</h5>
+                                    <p class="text-sm text-gray-600">4분면 매트릭스 자동 진단</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="bg-purple-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">3</div>
+                                <div>
+                                    <h5 class="font-bold">리포트 생성</h5>
+                                    <p class="text-sm text-gray-600">맞춤형 솔루션 자동 매칭</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="bg-orange-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">4</div>
+                                <div>
+                                    <h5 class="font-bold">이메일 발송</h5>
+                                    <p class="text-sm text-gray-600">담당자 이메일로 즉시 전송</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="text-center">
+                    <a href="/survey" class="inline-flex items-center navy-btn text-white px-16 py-6 rounded-xl font-bold text-2xl shadow-2xl transition-all">
+                        <i class="fas fa-clipboard-list mr-4 text-3xl"></i>
+                        지금 바로 진단 시작하기
+                    </a>
+                    <p class="mt-6 text-gray-600">
+                        <i class="fas fa-clock mr-2"></i>
+                        소요 시간: 약 10분 | 완전 무료
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <a href="/survey" class="navy-btn text-white px-10 py-5 rounded-xl font-bold text-lg hover:scale-105 transition-all shadow-2xl inline-flex items-center">
-                            <i class="fas fa-clipboard-list mr-3 text-xl"></i>
-                            진단 설문 시작하기
-                        </a>
-                        <a href="#features" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-10 py-5 rounded-xl font-bold text-lg transition-all backdrop-blur-sm inline-flex items-center">
-                            <i class="fas fa-info-circle mr-3"></i>
-                            서비스 소개
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Stats Section -->
-        <section class="py-16 bg-white border-b">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                    <div class="animate-fade-in-up">
-                        <div class="text-4xl font-bold text-blue-600 mb-2">15</div>
-                        <div class="text-gray-600 font-medium">진단 문항</div>
-                    </div>
-                    <div class="animate-fade-in-up" style="animation-delay: 0.1s">
-                        <div class="text-4xl font-bold text-blue-600 mb-2">4</div>
-                        <div class="text-gray-600 font-medium">진단 유형</div>
-                    </div>
-                    <div class="animate-fade-in-up" style="animation-delay: 0.2s">
-                        <div class="text-4xl font-bold text-blue-600 mb-2">10</div>
-                        <div class="text-gray-600 font-medium">소요 시간(분)</div>
-                    </div>
-                    <div class="animate-fade-in-up" style="animation-delay: 0.3s">
-                        <div class="text-4xl font-bold text-blue-600 mb-2">100%</div>
-                        <div class="text-gray-600 font-medium">무료 진단</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section id="features" class="py-24 bg-gradient-to-b from-white to-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16 animate-fade-in-up">
-                    <h3 class="text-4xl font-bold text-gray-900 mb-4">
-                        <i class="fas fa-star text-blue-600 mr-3"></i>
-                        진단 서비스 특징
-                    </h3>
-                    <p class="text-gray-600 text-lg">과학적이고 체계적인 진단 시스템</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="card-hover bg-white p-10 rounded-2xl border-2 border-blue-100 shadow-lg">
-                        <div class="bg-blue-100 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
-                            <i class="fas fa-chart-line text-4xl text-blue-600"></i>
-                        </div>
-                        <h4 class="text-2xl font-bold mb-4 text-gray-900">4분면 매트릭스 진단</h4>
-                        <p class="text-gray-600 text-lg leading-relaxed">
-                            탄소 리스크와 디지털 시급성을 기반으로 Type I~IV 유형을 과학적으로 판정합니다
-                        </p>
-                    </div>
-                    
-                    <div class="card-hover bg-white p-10 rounded-2xl border-2 border-green-100 shadow-lg">
-                        <div class="bg-green-100 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
-                            <i class="fas fa-file-alt text-4xl text-green-600"></i>
-                        </div>
-                        <h4 class="text-2xl font-bold mb-4 text-gray-900">맞춤형 리포트</h4>
-                        <p class="text-gray-600 text-lg leading-relaxed">
-                            환경·디지털·고용 이슈를 심층 분석하고 단계별 솔루션을 제시합니다
-                        </p>
-                    </div>
-                    
-                    <div class="card-hover bg-white p-10 rounded-2xl border-2 border-purple-100 shadow-lg">
-                        <div class="bg-purple-100 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
-                            <i class="fas fa-envelope text-4xl text-purple-600"></i>
-                        </div>
-                        <h4 class="text-2xl font-bold mb-4 text-gray-900">이메일 자동 발송</h4>
-                        <p class="text-gray-600 text-lg leading-relaxed">
-                            설문 완료 즉시 담당자 이메일로 상세한 진단 리포트를 발송합니다
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Process Section -->
-        <section class="py-24 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16 animate-fade-in-up">
-                    <h3 class="text-4xl font-bold text-gray-900 mb-4">
-                        <i class="fas fa-tasks text-blue-600 mr-3"></i>
-                        진단 프로세스
-                    </h3>
-                    <p class="text-gray-600 text-lg">간단한 4단계로 완성되는 진단</p>
-                </div>
-                <div class="grid md:grid-cols-4 gap-8">
-                    <div class="text-center group">
-                        <div class="bg-gradient-to-br from-purple-500 to-purple-700 text-white w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-xl group-hover:scale-110 transition-transform">
-                            1
-                        </div>
-                        <h4 class="font-bold text-xl mb-3 text-gray-900">설문 응답</h4>
-                        <p class="text-gray-600 leading-relaxed">15개 문항<br/>(약 10분 소요)</p>
-                    </div>
-                    <div class="text-center group">
-                        <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-xl group-hover:scale-110 transition-transform">
-                            2
-                        </div>
-                        <h4 class="font-bold text-xl mb-3 text-gray-900">AI 분석</h4>
-                        <p class="text-gray-600 leading-relaxed">4분면 매트릭스<br/>자동 진단</p>
-                    </div>
-                    <div class="text-center group">
-                        <div class="bg-gradient-to-br from-green-500 to-green-700 text-white w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-xl group-hover:scale-110 transition-transform">
-                            3
-                        </div>
-                        <h4 class="font-bold text-xl mb-3 text-gray-900">리포트 생성</h4>
-                        <p class="text-gray-600 leading-relaxed">맞춤형 솔루션<br/>자동 매칭</p>
-                    </div>
-                    <div class="text-center group">
-                        <div class="bg-gradient-to-br from-orange-500 to-orange-700 text-white w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-xl group-hover:scale-110 transition-transform">
-                            4
-                        </div>
-                        <h4 class="font-bold text-xl mb-3 text-gray-900">이메일 발송</h4>
-                        <p class="text-gray-600 leading-relaxed">담당자 이메일로<br/>즉시 전송</p>
-                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Latest News & Resources Section -->
-        <section class="py-24 bg-gradient-to-b from-white to-blue-50">
+        <section class="py-20 bg-gradient-to-b from-gray-50 to-blue-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16 animate-fade-in-up">
+                <div class="text-center mb-16">
                     <h3 class="text-4xl font-bold text-gray-900 mb-4">
                         <i class="fas fa-newspaper text-blue-600 mr-3"></i>
                         산업전환 지원사업 최신 소식
@@ -1194,22 +1266,6 @@ app.get('/', (c) => {
             </div>
         </section>
 
-        <!-- CTA Section -->
-        <section class="py-24 gradient-navy-bg text-white relative overflow-hidden">
-            <div class="absolute inset-0 bg-black opacity-10"></div>
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                <h3 class="text-4xl md:text-5xl font-bold mb-6 text-shadow">지금 바로 진단을 시작하세요</h3>
-                <p class="text-xl md:text-2xl mb-10 opacity-95 leading-relaxed">
-                    무료 진단으로 귀사의 산업전환 준비도를 확인하고<br/>
-                    정부 지원사업 매칭 기회를 잡으세요
-                </p>
-                <a href="/survey" class="inline-flex items-center bg-white text-blue-900 px-14 py-6 rounded-xl font-bold text-xl hover:scale-105 transition-all shadow-2xl">
-                    <i class="fas fa-rocket mr-3 text-2xl"></i>
-                    진단 설문 시작하기
-                </a>
-            </div>
-        </section>
-
         <!-- Footer -->
         <footer class="bg-gray-900 text-white py-12 border-t border-gray-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1227,7 +1283,6 @@ app.get('/', (c) => {
     </html>
   `)
 })
-
 // 설문조사 페이지
 app.get('/survey', (c) => {
   return c.html(`
