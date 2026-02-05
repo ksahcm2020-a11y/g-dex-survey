@@ -947,8 +947,177 @@ app.post('/api/surveys/delete-batch', adminAuth, async (c) => {
 // 웹 페이지 라우트
 // ============================================
 
-// 메인 페이지 (설문조사 폼)
+// 메인 페이지 (포털)
 app.get('/', (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>한국표준협회 산업일자리전환지원센터</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+          body { font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; }
+          .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+          .card-hover { transition: all 0.3s ease; }
+          .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+          @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+          .animate-fade-in-up { animation: fadeInUp 0.6s ease-out; }
+        </style>
+    </head>
+    <body class="bg-gray-50">
+        <!-- Header -->
+        <header class="gradient-bg text-white py-6 shadow-lg">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-building text-4xl"></i>
+                        <div>
+                            <h1 class="text-2xl font-bold">한국표준협회</h1>
+                            <p class="text-sm opacity-90">산업·일자리전환 지원센터</p>
+                        </div>
+                    </div>
+                    <a href="/admin/login" class="text-white hover:text-gray-200 transition">
+                        <i class="fas fa-user-shield text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-20">
+            <div class="max-w-7xl mx-auto px-4 text-center animate-fade-in-up">
+                <h2 class="text-5xl font-bold mb-6">
+                    G-DAX 산업전환<br/>준비도 진단 포털
+                </h2>
+                <p class="text-xl mb-8 opacity-90">
+                    탄소중립·디지털 전환 시대,<br/>
+                    귀사의 경쟁력을 진단하고 맞춤형 솔루션을 제공합니다
+                </p>
+                <div class="flex gap-4 justify-center">
+                    <a href="/survey" class="bg-white text-purple-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition shadow-xl">
+                        <i class="fas fa-clipboard-list mr-2"></i>
+                        진단 설문 시작하기
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4">
+                <h3 class="text-3xl font-bold text-center mb-12 text-gray-800">
+                    <i class="fas fa-star text-yellow-500 mr-2"></i>
+                    진단 서비스 특징
+                </h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card-hover bg-blue-50 p-8 rounded-xl border-2 border-blue-200">
+                        <div class="text-5xl mb-4 text-blue-600">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-gray-800">4분면 매트릭스 진단</h4>
+                        <p class="text-gray-600">
+                            탄소 리스크와 디지털 시급성을 기반으로<br/>
+                            Type I~IV 유형을 판정합니다
+                        </p>
+                    </div>
+                    
+                    <div class="card-hover bg-green-50 p-8 rounded-xl border-2 border-green-200">
+                        <div class="text-5xl mb-4 text-green-600">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-gray-800">맞춤형 리포트</h4>
+                        <p class="text-gray-600">
+                            환경·디지털·고용 이슈를 분석하고<br/>
+                            3단계 솔루션을 제시합니다
+                        </p>
+                    </div>
+                    
+                    <div class="card-hover bg-purple-50 p-8 rounded-xl border-2 border-purple-200">
+                        <div class="text-5xl mb-4 text-purple-600">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 text-gray-800">이메일 자동 발송</h4>
+                        <p class="text-gray-600">
+                            설문 완료 즉시 담당자 이메일로<br/>
+                            진단 리포트를 발송합니다
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section class="py-20 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4">
+                <h3 class="text-3xl font-bold text-center mb-12 text-gray-800">
+                    <i class="fas fa-tasks text-purple-600 mr-2"></i>
+                    진단 프로세스
+                </h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="bg-purple-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">
+                            1
+                        </div>
+                        <h4 class="font-bold text-lg mb-2 text-gray-800">설문 응답</h4>
+                        <p class="text-gray-600 text-sm">15개 문항<br/>(약 10분 소요)</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">
+                            2
+                        </div>
+                        <h4 class="font-bold text-lg mb-2 text-gray-800">AI 분석</h4>
+                        <p class="text-gray-600 text-sm">4분면 매트릭스<br/>자동 진단</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">
+                            3
+                        </div>
+                        <h4 class="font-bold text-lg mb-2 text-gray-800">리포트 생성</h4>
+                        <p class="text-gray-600 text-sm">맞춤형 솔루션<br/>자동 매칭</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-orange-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 shadow-lg">
+                            4
+                        </div>
+                        <h4 class="font-bold text-lg mb-2 text-gray-800">이메일 발송</h4>
+                        <p class="text-gray-600 text-sm">담당자 이메일로<br/>즉시 전송</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-20 gradient-bg text-white">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <h3 class="text-4xl font-bold mb-6">지금 바로 진단을 시작하세요</h3>
+                <p class="text-xl mb-8 opacity-90">
+                    무료 진단으로 귀사의 산업전환 준비도를 확인하고<br/>
+                    정부 지원사업 매칭 기회를 잡으세요
+                </p>
+                <a href="/survey" class="inline-block bg-white text-purple-700 px-12 py-5 rounded-lg font-bold text-xl hover:bg-gray-100 transition shadow-2xl">
+                    <i class="fas fa-rocket mr-2"></i>
+                    진단 설문 시작하기
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <p class="mb-2"><i class="fas fa-building mr-2"></i>한국표준협회 산업·일자리전환 지원센터</p>
+                <p class="text-sm text-gray-400">고용노동부 지원사업 | G-DAX 진단 시스템</p>
+            </div>
+        </footer>
+    </body>
+    </html>
+  `)
+})
+
+// 설문조사 페이지
+app.get('/survey', (c) => {
   return c.html(`
     <!DOCTYPE html>
     <html lang="ko">
