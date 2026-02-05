@@ -126,10 +126,8 @@ app.post('/api/survey', async (c) => {
           to: [data.contact_email],
           subject: emailSubject,
           html: emailHTML,
-            text: emailText
-          })
-          console.log(`Email sent via Resend to ${data.contact_email}`)
-        }
+          text: emailText
+        })
 
         // 이메일 발송 상태 업데이트
         await c.env.DB.prepare(`
