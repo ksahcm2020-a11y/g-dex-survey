@@ -850,113 +850,271 @@ app.get('/', (c) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>한국표준협회 일터혁신센터</title>
+        <title>G-DAX 산업일자리전환 지원포털 | 한국표준협회</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <style>
           body { font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; }
-          .primary-blue { color: #0066CC; }
-          .bg-primary-blue { background-color: #0066CC; }
-          .border-primary-blue { border-color: #0066CC; }
-          .hover-primary-blue:hover { background-color: #0052A3; }
+          .gradient-gdax { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #10b981 100%); }
+          .gradient-green { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+          .gradient-digital { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); }
+          .gradient-ai { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); }
           @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+          @keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
           .animate-fade-in { animation: fadeInUp 0.8s ease-out; }
+          .animate-slide-in { animation: slideInLeft 0.8s ease-out; }
+          .card-hover { transition: all 0.3s ease; }
+          .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
         </style>
     </head>
-    <body class="bg-gray-50">
+    <body class="bg-white">
         <!-- Header -->
-        <header class="bg-white shadow-sm sticky top-0 z-50">
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
-                    <!-- Logo -->
-                    <div class="flex items-center gap-3">
-                        <div class="bg-primary-blue w-12 h-12 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-building text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <div class="text-lg font-bold text-gray-900">한국표준협회 일터혁신센터</div>
-                            <div class="text-xs text-gray-500">KSA WORKPLACE INNOVATION CENTER</div>
+                    <!-- Logo & Title -->
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-12 h-12 rounded-lg gradient-gdax flex items-center justify-center">
+                                <i class="fas fa-leaf text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-lg font-bold text-gray-900">G-DAX 산업전환 지원포털</div>
+                                <div class="text-xs text-gray-500">한국표준협회 · 고용노동부 선정</div>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Navigation -->
-                    <nav class="hidden md:flex items-center gap-8">
-                        <a href="/" class="text-gray-700 hover:text-blue-600 font-medium transition">홈</a>
-                        <a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition">일터혁신 소개</a>
-                        <a href="#diagnosis" class="text-gray-700 hover:text-blue-600 font-medium transition">혁신 진단</a>
-                        <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition">상담 및 문의</a>
-                        <a href="/survey" class="bg-primary-blue hover-primary-blue text-white px-6 py-2.5 rounded-full font-bold transition shadow-md">
-                            진단 시작하기
+                    <nav class="hidden lg:flex items-center gap-6">
+                        <a href="#gdax" class="text-gray-700 hover:text-blue-600 font-medium transition">G-DAX란?</a>
+                        <a href="#diagnosis" class="text-gray-700 hover:text-blue-600 font-medium transition">준비도 진단</a>
+                        <a href="#support" class="text-gray-700 hover:text-blue-600 font-medium transition">지원사업</a>
+                        <a href="#roadmap" class="text-gray-700 hover:text-blue-600 font-medium transition">전환 로드맵</a>
+                        <a href="/admin/login" class="text-gray-500 hover:text-gray-700 text-sm transition">
+                            <i class="fas fa-user-circle mr-1"></i>관리자
                         </a>
                     </nav>
 
-                    <!-- Mobile Menu Button -->
-                    <button class="md:hidden text-gray-700">
+                    <!-- CTA Button -->
+                    <a href="/survey" class="hidden md:inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-bold transition shadow-lg">
+                        <i class="fas fa-clipboard-check mr-2"></i>
+                        무료 진단 시작
+                    </a>
+
+                    <!-- Mobile Menu -->
+                    <button class="lg:hidden text-gray-700">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
             </div>
         </header>
 
-        <!-- Hero Section -->
-        <section class="relative py-24 bg-gradient-to-br from-blue-50 via-white to-gray-50 overflow-hidden">
+        <!-- Hero Section: Perfect Storm Alert -->
+        <section class="relative py-20 gradient-gdax overflow-hidden">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+                <div class="absolute bottom-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+            </div>
+            
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center text-white animate-fade-in">
+                    <!-- Alert Badge -->
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full mb-8">
+                        <i class="fas fa-exclamation-triangle text-yellow-300 text-xl"></i>
+                        <span class="font-bold text-lg">Perfect Storm 시대 도래</span>
+                    </div>
+                    
+                    <!-- Main Title -->
+                    <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+                        저탄소·디지털·AI 대전환과<br/>
+                        <span class="text-yellow-300">초고령화</span>가 동시 진행
+                    </h1>
+                    
+                    <!-- Subtitle -->
+                    <p class="text-2xl md:text-3xl font-bold mb-4 text-blue-100">
+                        산업·직무·숙련의 구조가 빠르게 재편되는
+                    </p>
+                    <p class="text-3xl md:text-4xl font-black text-yellow-300 mb-8">
+                        '퍼펙트 스톰'의 도래
+                    </p>
+                    
+                    <!-- Description -->
+                    <p class="text-xl text-blue-50 max-w-3xl mx-auto mb-12 leading-relaxed">
+                        규제 심화와 관리 부담이 증가하는 시대,<br/>
+                        G-DAX 기반의 체계적인 산업전환 준비가 필수입니다.
+                    </p>
+                    
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="/survey" class="inline-flex items-center justify-center bg-white text-blue-600 hover:bg-blue-50 px-10 py-5 rounded-full font-black text-xl transition shadow-2xl">
+                            <i class="fas fa-chart-line mr-3"></i>
+                            지금 준비도 진단하기
+                        </a>
+                        <a href="#gdax" class="inline-flex items-center justify-center border-3 border-white text-white hover:bg-white/10 px-10 py-5 rounded-full font-bold text-xl transition backdrop-blur-sm">
+                            G-DAX 자세히 보기
+                            <i class="fas fa-arrow-down ml-3"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Stats Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 animate-fade-in" style="animation-delay: 0.3s">
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-black text-yellow-300 mb-2">3대</div>
+                        <div class="text-sm font-medium text-blue-100">핵심 전환 축</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-black text-yellow-300 mb-2">4유형</div>
+                        <div class="text-sm font-medium text-blue-100">진단 매트릭스</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-black text-yellow-300 mb-2">15문항</div>
+                        <div class="text-sm font-medium text-blue-100">준비도 평가</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+                        <div class="text-4xl font-black text-yellow-300 mb-2">10분</div>
+                        <div class="text-sm font-medium text-blue-100">진단 완료</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- G-DAX 3 Pillars Section -->
+        <section id="gdax" class="py-24 bg-gradient-to-b from-white to-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <!-- Left Content -->
-                    <div class="animate-fade-in">
-                        <div class="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                            한국표준협회 일터혁신센터 2026
+                <!-- Section Header -->
+                <div class="text-center mb-16 animate-fade-in">
+                    <div class="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                        G-DAX 기반 산업 대전환의 함의
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                        3대 전환 축으로 보는<br/>
+                        <span class="text-blue-600">산업 구조의 근본적 변화</span>
+                    </h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        전통 제조/서비스업의 경계가 붕괴되고 Tech 기반의 융합산업으로 재편 가속화
+                    </p>
+                </div>
+
+                <!-- 3 Pillars Grid -->
+                <div class="grid md:grid-cols-3 gap-8 mb-12">
+                    <!-- Green -->
+                    <div class="card-hover bg-white rounded-3xl shadow-xl p-8 border-t-4 border-green-500">
+                        <div class="w-16 h-16 rounded-2xl gradient-green flex items-center justify-center mb-6">
+                            <i class="fas fa-leaf text-white text-3xl"></i>
                         </div>
-                        <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-                            일터혁신으로 완성하는<br/>
-                            <span class="primary-blue">기업의 미래 가치</span>
-                        </h1>
-                        <p class="text-xl text-gray-600 mb-4 leading-relaxed">
-                            한국표준협회 일터혁신센터가 노사가 함께 행복한 일터를 만듭니다.
-                        </p>
-                        <p class="text-lg text-gray-500 mb-10 leading-relaxed">
-                            고용노동부 지원 사업을 통한 전문 컨설팅으로 귀사만의 최적화된 혁신 로드맵을 제안해 드립니다.
-                        </p>
-                        
-                        <!-- CTA Buttons -->
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="/survey" class="inline-flex items-center justify-center bg-primary-blue hover-primary-blue text-white px-8 py-4 rounded-full font-bold text-lg transition shadow-lg">
-                                무료 진단 시작하기
-                                <i class="fas fa-arrow-right ml-3"></i>
-                            </a>
-                            <a href="#about" class="inline-flex items-center justify-center border-2 border-primary-blue primary-blue px-8 py-4 rounded-full font-bold text-lg hover:bg-blue-50 transition">
-                                자세히 알아보기
-                            </a>
+                        <h3 class="text-2xl font-black text-gray-900 mb-4">
+                            Green<br/>
+                            <span class="text-green-600">저탄소 전환</span>
+                        </h3>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                <p class="text-gray-700">탈탄소 규제 및 글로벌 공급망 요구 강화</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                <p class="text-gray-700">재생 에너지 전환 투자 확대</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                                <p class="text-gray-700">친환경 공정 도입으로 인한 기존 생산 방식 변화</p>
+                            </div>
+                        </div>
+                        <div class="bg-green-50 rounded-xl p-4">
+                            <p class="text-sm font-bold text-green-800">
+                                <i class="fas fa-arrow-right mr-2"></i>
+                                산업 구조의 근본적 변화
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Right Image -->
-                    <div class="relative hidden md:block animate-fade-in" style="animation-delay: 0.2s">
-                        <div class="relative">
-                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800" 
-                                 alt="일터혁신" 
-                                 class="rounded-3xl shadow-2xl w-full h-[500px] object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-transparent rounded-3xl"></div>
+                    <!-- Digital -->
+                    <div class="card-hover bg-white rounded-3xl shadow-xl p-8 border-t-4 border-blue-500">
+                        <div class="w-16 h-16 rounded-2xl gradient-digital flex items-center justify-center mb-6">
+                            <i class="fas fa-network-wired text-white text-3xl"></i>
                         </div>
-                        <!-- Floating Stats -->
-                        <div class="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-6">
-                            <div class="text-4xl font-bold primary-blue mb-1">50+</div>
-                            <div class="text-sm text-gray-600">년 전문 경험</div>
+                        <h3 class="text-2xl font-black text-gray-900 mb-4">
+                            Digital<br/>
+                            <span class="text-blue-600">데이터화 전환</span>
+                        </h3>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                                <p class="text-gray-700">산업 전반의 데이터 표준화 및 연결성 요구 증가</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                                <p class="text-gray-700">사이버 보안 및 개인정보 보호 준수 필수화</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-blue-500 mt-1"></i>
+                                <p class="text-gray-700">디지털 트윈, IoT 기반의 실시간 모니터링 확산</p>
+                            </div>
                         </div>
-                        <div class="absolute -top-6 -right-6 bg-white rounded-2xl shadow-xl p-6">
-                            <div class="text-4xl font-bold primary-blue mb-1">1,000+</div>
-                            <div class="text-sm text-gray-600">기업 지원</div>
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <p class="text-sm font-bold text-blue-800">
+                                <i class="fas fa-arrow-right mr-2"></i>
+                                기존 노동집약적 산업 구조의 축소
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- AI -->
+                    <div class="card-hover bg-white rounded-3xl shadow-xl p-8 border-t-4 border-purple-500">
+                        <div class="w-16 h-16 rounded-2xl gradient-ai flex items-center justify-center mb-6">
+                            <i class="fas fa-robot text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-gray-900 mb-4">
+                            AI<br/>
+                            <span class="text-purple-600">지능형 자동화</span>
+                        </h3>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-purple-500 mt-1"></i>
+                                <p class="text-gray-700">업무 자동화 및 AI 기반 의사결정 지원 확산</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-purple-500 mt-1"></i>
+                                <p class="text-gray-700">단순 반복 업무의 급격한 대체 및 소멸</p>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i class="fas fa-check-circle text-purple-500 mt-1"></i>
+                                <p class="text-gray-700">직무 단위 생산성 격차 확대 (AI 활용 여부)</p>
+                            </div>
+                        </div>
+                        <div class="bg-purple-50 rounded-xl p-4">
+                            <p class="text-sm font-bold text-purple-800">
+                                <i class="fas fa-arrow-right mr-2"></i>
+                                직무 재설계의 시급성
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Impact Statement -->
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 md:p-12 text-white text-center">
+                    <h3 class="text-3xl md:text-4xl font-black mb-6">
+                        단순 인력 감축이 아닌,<br/>
+                        직무(Job)와 스킬(Skill) 구조의 대규모 재설계 필요
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                            <i class="fas fa-sync-alt text-3xl mb-3"></i>
+                            <p class="font-bold text-lg">소멸 직무의 신속한 전환<br/>(Reskilling)</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                            <i class="fas fa-chart-line text-3xl mb-3"></i>
+                            <p class="font-bold text-lg">고부가가치 직무 중심의<br/>인력 재배치</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Stats Bar -->
-        <section class="bg-white py-12 border-y">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                    <div>
+        <!-- Diagnosis Section -->
                         <div class="text-4xl font-bold primary-blue mb-2">15</div>
                         <div class="text-gray-600">진단 문항</div>
                     </div>
@@ -1021,44 +1179,128 @@ app.get('/', (c) => {
         </section>
 
         <!-- Diagnosis Section -->
-        <section id="diagnosis" class="py-20 bg-white">
+        <section id="diagnosis" class="py-24 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                        G-DAX 산업전환 준비도 진단
+                <!-- Section Header -->
+                <div class="text-center mb-16 animate-fade-in">
+                    <div class="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                        G-DAX 준비도 진단
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                        귀사의 <span class="text-blue-600">산업전환 준비도</span>를<br/>
+                        과학적으로 진단합니다
                     </h2>
-                    <p class="text-xl text-gray-600">과학적 진단으로 귀사의 현재 위치를 파악하세요</p>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        4분면 매트릭스 기반의 체계적 진단으로 현재 위치를 파악하고<br/>
+                        맞춤형 전환 로드맵을 제시합니다
+                    </p>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h3 class="text-3xl font-bold mb-6">진단 프로세스</h3>
-                        <div class="space-y-6">
-                            <div class="flex items-start gap-4">
-                                <div class="bg-primary-blue text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">1</div>
-                                <div>
-                                    <h4 class="font-bold text-lg mb-2">설문 응답 (10분)</h4>
-                                    <p class="text-gray-600">15개 문항에 대한 5점 척도 평가</p>
+                <!-- Diagnosis Grid -->
+                <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+                    <!-- Left: Process -->
+                    <div class="space-y-6">
+                        <h3 class="text-3xl font-black mb-8">
+                            <i class="fas fa-clipboard-check text-blue-600 mr-3"></i>
+                            진단 프로세스
+                        </h3>
+                        
+                        <div class="flex items-start gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-lg">
+                                1
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl mb-2 text-gray-900">설문 응답 <span class="text-blue-600">(약 10분)</span></h4>
+                                <p class="text-gray-600 leading-relaxed">15개 문항에 대한 5점 척도 평가<br/>기업 정보, 탄소중립, 디지털 전환 수준 측정</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-lg">
+                                2
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl mb-2 text-gray-900">AI 자동 분석</h4>
+                                <p class="text-gray-600 leading-relaxed">4분면 매트릭스 기반 유형 판정<br/>Type I-IV 자동 분류 및 우선순위 도출</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-lg">
+                                3
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl mb-2 text-gray-900">맞춤형 리포트 생성</h4>
+                                <p class="text-gray-600 leading-relaxed">유형별 전환 전략 및 지원사업 매칭<br/>시각화된 분석 결과 및 실행 가이드</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-lg">
+                                4
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl mb-2 text-gray-900">이메일 자동 발송</h4>
+                                <p class="text-gray-600 leading-relaxed">담당자 이메일로 즉시 리포트 전송<br/>언제든지 다시 확인 가능한 영구 링크</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Matrix Visual -->
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 shadow-xl">
+                        <h3 class="text-2xl font-black mb-6 text-center">
+                            <i class="fas fa-th-large text-blue-600 mr-2"></i>
+                            4분면 진단 매트릭스
+                        </h3>
+                        <div class="bg-white rounded-2xl p-6 shadow-lg">
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <!-- Type I -->
+                                <div class="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                                    <div class="text-sm font-bold text-red-700 mb-2">Type I</div>
+                                    <div class="text-xs font-bold text-red-900">구조 전환형</div>
+                                    <div class="text-xs text-gray-600 mt-2">탄소↑ 디지털↑</div>
+                                </div>
+                                <!-- Type II -->
+                                <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
+                                    <div class="text-sm font-bold text-blue-700 mb-2">Type II</div>
+                                    <div class="text-xs font-bold text-blue-900">디지털 선도형</div>
+                                    <div class="text-xs text-gray-600 mt-2">탄소↓ 디지털↑</div>
+                                </div>
+                                <!-- Type III -->
+                                <div class="bg-green-50 border-2 border-green-200 rounded-xl p-4">
+                                    <div class="text-sm font-bold text-green-700 mb-2">Type III</div>
+                                    <div class="text-xs font-bold text-green-900">탄소 대응형</div>
+                                    <div class="text-xs text-gray-600 mt-2">탄소↑ 디지털↓</div>
+                                </div>
+                                <!-- Type IV -->
+                                <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-4">
+                                    <div class="text-sm font-bold text-gray-700 mb-2">Type IV</div>
+                                    <div class="text-xs font-bold text-gray-900">안정 유지형</div>
+                                    <div class="text-xs text-gray-600 mt-2">탄소↓ 디지털↓</div>
                                 </div>
                             </div>
-                            <div class="flex items-start gap-4">
-                                <div class="bg-primary-blue text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">2</div>
-                                <div>
-                                    <h4 class="font-bold text-lg mb-2">AI 분석</h4>
-                                    <p class="text-gray-600">4분면 매트릭스 자동 진단</p>
-                                </div>
+                            <div class="text-center text-xs text-gray-500 pt-3 border-t">
+                                귀사의 현재 수준에 맞는 맞춤형 전략 제시
                             </div>
-                            <div class="flex items-start gap-4">
-                                <div class="bg-primary-blue text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">3</div>
-                                <div>
-                                    <h4 class="font-bold text-lg mb-2">리포트 생성</h4>
-                                    <p class="text-gray-600">맞춤형 솔루션 자동 매칭</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-4">
-                                <div class="bg-primary-blue text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">4</div>
-                                <div>
-                                    <h4 class="font-bold text-lg mb-2">이메일 발송</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="text-center">
+                    <a href="/survey" class="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-12 py-6 rounded-full font-black text-2xl transition shadow-2xl">
+                        <i class="fas fa-rocket mr-3"></i>
+                        지금 바로 무료 진단 시작하기
+                        <i class="fas fa-arrow-right ml-3"></i>
+                    </a>
+                    <p class="text-gray-500 mt-4">
+                        <i class="fas fa-clock mr-2"></i>약 10분 소요 · 완전 무료 · 이메일로 즉시 발송
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Support Programs Section -->
                                     <p class="text-gray-600">담당자 이메일로 즉시 전송</p>
                                 </div>
                             </div>
@@ -1264,15 +1506,62 @@ app.get('/', (c) => {
         </section>
 
         <!-- Footer -->
-        <footer class="bg-gray-900 text-white py-12 border-t border-gray-800">
+        <footer class="bg-gray-900 text-white py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <div class="flex items-center justify-center gap-3 mb-4">
-                        <i class="fas fa-building text-2xl text-blue-400"></i>
-                        <span class="text-xl font-bold">한국표준협회 산업·일자리전환 지원센터</span>
+                <div class="grid md:grid-cols-3 gap-12 mb-12">
+                    <!-- Left: Logo & Description -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg gradient-gdax flex items-center justify-center">
+                                <i class="fas fa-leaf text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg">G-DAX 산업전환 지원포털</div>
+                                <div class="text-sm text-gray-400">한국표준협회</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            저탄소·디지털·AI 대전환 시대,<br/>
+                            체계적인 산업전환을 지원합니다.
+                        </p>
                     </div>
-                    <p class="text-gray-400 mb-2">고용노동부 지원사업 | G-DAX 진단 시스템</p>
-                    <p class="text-gray-500 text-sm">© 2026 Korea Standards Association. All rights reserved.</p>
+
+                    <!-- Center: Quick Links -->
+                    <div>
+                        <h4 class="font-bold text-lg mb-4">바로가기</h4>
+                        <ul class="space-y-3 text-gray-400">
+                            <li><a href="#gdax" class="hover:text-white transition">G-DAX란?</a></li>
+                            <li><a href="#diagnosis" class="hover:text-white transition">준비도 진단</a></li>
+                            <li><a href="#support" class="hover:text-white transition">지원사업</a></li>
+                            <li><a href="/admin/login" class="hover:text-white transition">관리자 로그인</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Right: Contact -->
+                    <div>
+                        <h4 class="font-bold text-lg mb-4">문의</h4>
+                        <ul class="space-y-3 text-gray-400 text-sm">
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-building mt-1 text-blue-400"></i>
+                                <div>한국표준협회<br/>산업일자리전환 지원센터</div>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-phone text-blue-400"></i>
+                                <span>고용노동부 지원사업</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-envelope text-blue-400"></i>
+                                <span>2026년 선정 전달기관</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Bottom Bar -->
+                <div class="border-t border-gray-800 pt-8 text-center">
+                    <p class="text-gray-500 text-sm">
+                        © 2026 Korea Standards Association. All rights reserved. | G-DAX 산업전환 준비도 진단 시스템
+                    </p>
                 </div>
             </div>
         </footer>
