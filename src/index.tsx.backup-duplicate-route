@@ -844,6 +844,7 @@ app.post('/api/surveys/delete-batch', adminAuth, async (c) => {
 
 // 메인 페이지 (포털)
 app.get('/', (c) => {
+app.get('/', (c) => {
   return c.html(`
     <!DOCTYPE html>
     <html lang="ko">
