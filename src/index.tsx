@@ -908,8 +908,11 @@ app.get('/', (c) => {
                     <header className={\`sticky top-0 z-50 bg-white transition-all duration-300 \${scrolled ? 'shadow-md py-2' : 'border-b border-slate-100 py-4'}\`}>
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                {/* KSA Official Logo Image */}
-                                <img src="https://www.genspark.ai/api/files/s/AXKJTRVN" alt="KSA 한국표준협회" className="h-8 md:h-10" />
+                                {/* KSA Logo Text */}
+                                <div className="flex items-center">
+                                    <span className="text-2xl md:text-3xl font-black text-[#004ea2]">KSA</span>
+                                    <span className="text-base md:text-lg font-bold text-slate-700 ml-2">한국표준협회</span>
+                                </div>
                                 <span className="hidden md:inline text-slate-300 mx-2">|</span>
                                 <span className="hidden md:inline text-sm font-medium text-slate-600 pt-1">산업일자리전환지원센터</span>
                             </div>
