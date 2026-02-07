@@ -908,12 +908,8 @@ app.get('/', (c) => {
                     <header className={\`sticky top-0 z-50 bg-white transition-all duration-300 \${scrolled ? 'shadow-md py-2' : 'border-b border-slate-100 py-4'}\`}>
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                {/* KSA Logo - SVG Inline */}
-                                <svg className="h-8 md:h-12 w-auto" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="200" height="60" fill="white"/>
-                                    <text x="10" y="35" fontFamily="Arial, sans-serif" fontSize="28" fontWeight="bold" fill="#004ea2">KSA</text>
-                                    <text x="10" y="52" fontFamily="Noto Sans KR, sans-serif" fontSize="12" fill="#333333">한국표준협회</text>
-                                </svg>
+                                {/* KSA Official Logo */}
+                                <img src="https://www.genspark.ai/api/files/s/0JE6nBNy" alt="KSA 한국표준협회" className="h-8 md:h-12 w-auto" />
                                 <span className="hidden md:inline text-slate-300 mx-2">|</span>
                                 <span className="hidden md:inline text-lg font-bold text-slate-800 pt-1">산업일자리전환지원센터</span>
                             </div>
