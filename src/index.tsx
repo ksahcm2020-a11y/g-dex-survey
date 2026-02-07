@@ -1426,7 +1426,7 @@ app.get('/survey', (c) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>G-DAX 산업전환 준비도 자가진단 설문조사</title>
+        <title>산업일자리전환 준비도 진단 설문조사</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <style>
@@ -1442,7 +1442,7 @@ app.get('/survey', (c) => {
                 <div class="text-center mb-8">
                     <h1 class="text-3xl font-bold text-blue-900 mb-2">
                         <i class="fas fa-industry mr-2"></i>
-                        G-DAX 산업전환 준비도 자가진단
+                        산업일자리전환 준비도 진단
                     </h1>
                     <p class="text-gray-600">설문조사를 완료하시면 개별 리포트를 이메일로 발송해 드립니다.</p>
                 </div>
