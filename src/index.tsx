@@ -934,9 +934,6 @@ app.get('/', (c) => {
                         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/60 to-slate-900"></div>
                         
                         <div className="relative z-10 text-center max-w-5xl px-4">
-                            <div className="inline-block px-4 py-1 rounded-full border border-blue-400/50 bg-blue-900/30 backdrop-blur mb-6">
-                                <span className="text-blue-300 text-sm font-bold tracking-wide">2026 산업일자리전환 컨설팅</span>
-                            </div>
                             <h1 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight text-shadow">
                                 Green-Digital AI의 파고를 넘는<br/>
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">G-DAX 네비게이터</span>
