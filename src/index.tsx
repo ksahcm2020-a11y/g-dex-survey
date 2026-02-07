@@ -908,9 +908,10 @@ app.get('/', (c) => {
                     <header className={\`sticky top-0 z-50 bg-white transition-all duration-300 \${scrolled ? 'shadow-md py-2' : 'border-b border-slate-100 py-4'}\`}>
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <span className="text-lg font-bold text-slate-800">한국표준협회</span>
+                                {/* KSA Official Logo Image */}
+                                <img src="ksalogo_jpg/한글가로.jpg" alt="KSA 한국표준협회" className="h-8 md:h-12" />
                                 <span className="hidden md:inline text-slate-300 mx-2">|</span>
-                                <span className="hidden md:inline text-sm font-medium text-slate-600">산업일자리전환지원센터</span>
+                                <span className="hidden md:inline text-lg font-bold text-slate-800 pt-1">산업일자리전환지원센터</span>
                             </div>
                             <nav className="hidden md:flex gap-8 text-[15px] font-medium text-slate-600">
                                 <a href="#background" className="hover:text-[#004ea2]">배경 및 필요성</a>
@@ -1108,7 +1109,7 @@ app.get('/', (c) => {
                                     </div>
                                 </div>
                                 <div className="bg-[#004ea2] rounded-2xl p-10 text-center text-white shadow-xl">
-                                    <h3 className="text-3xl font-bold mb-4">해결책은 "정부지원 무료 컨설팅" 활용입니다</h3>
+                                    <h3 className="text-3xl font-bold mb-4">정부지원 무료 컨설팅을 활용해서 해결책을 찾으세요</h3>
                                     <p className="text-blue-100 text-lg mb-8">
                                         복잡한 산업 전환의 과제, 개별 기업 혼자서는 해결하기 어렵습니다.<br/>
                                         정부의 전폭적인 지원을 통해 비용 부담 없이 전문가의 솔루션을 받으세요.
