@@ -910,7 +910,7 @@ app.get('/', (c) => {
                             <div className="flex items-center gap-3">
                                 {/* KSA Logo */}
                                 <div className="flex items-center gap-2">
-                                    <span className="text-2xl md:text-3xl font-black text-[#004ea2]" style="font-family: Arial, sans-serif;">KSA</span>
+                                    <span className="text-2xl md:text-3xl font-black text-[#004ea2]">KSA</span>
                                     <span className="text-lg md:text-xl font-bold text-slate-700">한국표준협회</span>
                                 </div>
                                 <span className="hidden md:inline text-slate-300 mx-2">|</span>
