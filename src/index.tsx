@@ -909,7 +909,7 @@ app.get('/', (c) => {
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
                                 {/* KSA Official Logo Image */}
-                                <img src="ksalogo_jpg/한글가로.jpg" alt="KSA 한국표준협회" className="h-8 md:h-12" />
+                                <img src="https://www.ksa.or.kr/img/common/logo.svg" alt="KSA 한국표준협회" className="h-8 md:h-12" />
                                 <span className="hidden md:inline text-slate-300 mx-2">|</span>
                                 <span className="hidden md:inline text-lg font-bold text-slate-800 pt-1">산업일자리전환지원센터</span>
                             </div>
