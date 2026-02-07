@@ -908,13 +908,7 @@ app.get('/', (c) => {
                     <header className={\`sticky top-0 z-50 bg-white transition-all duration-300 \${scrolled ? 'shadow-md py-2' : 'border-b border-slate-100 py-4'}\`}>
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                {/* KSA Logo */}
-                                <div className="flex items-center gap-2">
-                                    <span className="text-2xl md:text-3xl font-black text-[#004ea2]">KSA</span>
-                                    <span className="text-lg md:text-xl font-bold text-slate-700">한국표준협회</span>
-                                </div>
-                                <span className="hidden md:inline text-slate-300 mx-2">|</span>
-                                <span className="hidden md:inline text-sm font-medium text-slate-600 pt-1">산업일자리전환지원센터</span>
+                                <span className="text-sm font-medium text-slate-600">산업일자리전환지원센터</span>
                             </div>
                             <nav className="hidden md:flex gap-8 text-[15px] font-medium text-slate-600">
                                 <a href="#background" className="hover:text-[#004ea2]">배경 및 필요성</a>
