@@ -908,14 +908,10 @@ app.get('/', (c) => {
                     <header className={\`sticky top-0 z-50 bg-white transition-all duration-300 \${scrolled ? 'shadow-md py-2' : 'border-b border-slate-100 py-4'}\`}>
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                {/* KSA Logo SVG */}
-                                <div className="flex items-center h-8 md:h-10">
-                                    <svg viewBox="0 0 400 80" className="h-full w-auto" xmlns="http://www.w3.org/2000/svg">
-                                        {/* KSA Text */}
-                                        <text x="10" y="55" fontFamily="Arial, sans-serif" fontSize="48" fontWeight="900" fill="#004ea2">KSA</text>
-                                        {/* 한국표준협회 Text */}
-                                        <text x="140" y="55" fontFamily="'Noto Sans KR', sans-serif" fontSize="28" fontWeight="700" fill="#333333">한국표준협회</text>
-                                    </svg>
+                                {/* KSA Logo */}
+                                <div className="flex items-center gap-2">
+                                    <span className="text-2xl md:text-3xl font-black text-[#004ea2]" style="font-family: Arial, sans-serif;">KSA</span>
+                                    <span className="text-lg md:text-xl font-bold text-slate-700">한국표준협회</span>
                                 </div>
                                 <span className="hidden md:inline text-slate-300 mx-2">|</span>
                                 <span className="hidden md:inline text-sm font-medium text-slate-600 pt-1">산업일자리전환지원센터</span>
