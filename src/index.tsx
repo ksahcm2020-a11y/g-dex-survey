@@ -1429,61 +1429,104 @@ app.get('/survey', (c) => {
         <title>산업일자리전환 준비도 진단 설문조사</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
         <style>
-          body { font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; }
-          .scale-option { transition: all 0.2s; }
-          .scale-option:hover { transform: scale(1.05); }
-          .scale-option.selected { background-color: #3b82f6; color: white; }
+          body { font-family: 'Noto Sans KR', sans-serif; }
+          html { scroll-behavior: smooth; }
+          .scale-option { transition: all 0.3s; }
+          .scale-option:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 78, 162, 0.15); }
+          .scale-option.selected { background-color: #004ea2; color: white; border-color: #004ea2; }
+          .section-card { background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.3s; }
+          .section-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
         </style>
     </head>
-    <body class="bg-gray-50">
-        <div class="min-h-screen py-8 px-4">
-            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
-                <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-blue-900 mb-2">
-                        <i class="fas fa-industry mr-2"></i>
+    <body class="bg-slate-50">
+        <!-- Header matching portal design -->
+        <header class="bg-white border-b border-slate-200 py-4 sticky top-0 z-50 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+                <a href="/" class="flex items-center gap-3">
+                    <svg class="h-8 md:h-10 w-auto" viewBox="0 0 500 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <text x="5" y="55" fontFamily="Georgia, serif" fontSize="60" fontWeight="bold" fill="#004d5c" letterSpacing="-2">KSA</text>
+                        <text x="175" y="35" fontFamily="Noto Sans KR, Arial, sans-serif" fontSize="22" fontWeight="700" fill="#2d2d2d">한국표준협회</text>
+                        <text x="175" y="60" fontFamily="Arial, sans-serif" fontSize="12" fontWeight="500" fill="#2d2d2d" letterSpacing="0.5">KOREAN STANDARDS ASSOCIATION</text>
+                    </svg>
+                </a>
+                <a href="/" class="text-sm font-medium text-slate-600 hover:text-[#004ea2] transition-colors">
+                    <i class="fas fa-home mr-1"></i> 포털로 돌아가기
+                </a>
+            </div>
+        </header>
+
+        <div class="min-h-screen py-12 px-4">
+            <div class="max-w-5xl mx-auto">
+                <!-- Hero Section -->
+                <div class="text-center mb-12">
+                    <div class="inline-block bg-blue-50 text-[#004ea2] px-4 py-2 rounded-full text-sm font-bold mb-4">
+                        <i class="fas fa-clipboard-list mr-2"></i>준비도 진단
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
                         산업일자리전환 준비도 진단
                     </h1>
-                    <p class="text-gray-600">설문조사를 완료하시면 개별 리포트를 이메일로 발송해 드립니다.</p>
+                    <p class="text-lg text-slate-600 mb-6">
+                        설문조사를 완료하시면 <span class="font-bold text-[#004ea2]">개별 맞춤형 리포트</span>를 이메일로 발송해 드립니다.
+                    </p>
+                    <div class="flex justify-center gap-2 text-sm text-slate-500">
+                        <div class="flex items-center">
+                            <i class="fas fa-clock mr-1 text-[#004ea2]"></i>
+                            <span>소요시간 약 5분</span>
+                        </div>
+                        <span class="text-slate-300">|</span>
+                        <div class="flex items-center">
+                            <i class="fas fa-file-alt mr-1 text-[#004ea2]"></i>
+                            <span>총 15개 문항</span>
+                        </div>
+                    </div>
                 </div>
 
-                <form id="surveyForm" class="space-y-6">
+                <form id="surveyForm" class="space-y-8">
                     <!-- 기업 기본 정보 -->
-                    <div class="border-b pb-6">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4">
-                            <i class="fas fa-building mr-2 text-blue-600"></i>
-                            기업 기본 정보
-                        </h2>
+                    <div class="section-card p-8">
+                        <div class="flex items-center mb-6 pb-4 border-b border-slate-100">
+                            <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-building text-[#004ea2] text-xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-900">기업 기본 정보</h2>
+                                <p class="text-sm text-slate-500 mt-1">귀사의 기본 정보를 입력해 주세요</p>
+                            </div>
+                        </div>
                         
-                        <div class="grid md:grid-cols-2 gap-4">
+                        <div class="grid md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">1. 회사명 *</label>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">1. 회사명 <span class="text-red-500">*</span></label>
                                 <input type="text" name="company_name" required 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">2. 대표자명 *</label>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">2. 대표자명 <span class="text-red-500">*</span></label>
                                 <input type="text" name="ceo_name" required 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">3. 소재지 *</label>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">3. 소재지 <span class="text-red-500">*</span></label>
                                 <input type="text" name="location" required 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">4. 주생산품(업종) *</label>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">4. 주생산품(업종) <span class="text-red-500">*</span></label>
                                 <input type="text" name="main_product" required 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">5. 상시 근로자 수 *</label>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">5. 상시 근로자 수 <span class="text-red-500">*</span></label>
                                 <select name="employee_count" required 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                                     <option value="">선택하세요</option>
                                     <option value="10인 미만">10인 미만</option>
                                     <option value="10~29인">10~29인</option>
@@ -1495,9 +1538,9 @@ app.get('/survey', (c) => {
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">6. 지난해 매출액 (억원)</label>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">6. 지난해 매출액 (억원)</label>
                                 <input type="number" name="annual_revenue" step="0.1" 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                             </div>
                         </div>
                     </div>
@@ -1506,104 +1549,143 @@ app.get('/survey', (c) => {
                     <div id="surveyQuestions"></div>
 
                     <!-- 지원 분야 -->
-                    <div class="border-b pb-6">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4">
-                            <i class="fas fa-hands-helping mr-2 text-blue-600"></i>
-                            11. 가장 시급한 지원 분야를 선택해 주세요 (중복 선택 가능)
-                        </h2>
-                        <div class="space-y-2">
-                            <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                <input type="checkbox" name="support_areas" value="사업재편 전략 수립" class="mr-3">
-                                <span>사업재편 전략 수립 (신사업 발굴)</span>
+                    <div class="section-card p-8">
+                        <div class="flex items-center mb-6 pb-4 border-b border-slate-100">
+                            <div class="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-hands-helping text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-900">지원 분야 선택</h2>
+                                <p class="text-sm text-slate-500 mt-1">가장 시급한 지원 분야를 선택해 주세요 (중복 선택 가능)</p>
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <label class="flex items-center p-4 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer border-2 border-transparent hover:border-[#004ea2] transition-all">
+                                <input type="checkbox" name="support_areas" value="사업재편 전략 수립" class="mr-3 w-5 h-5 text-[#004ea2] rounded focus:ring-[#004ea2]">
+                                <span class="font-medium text-slate-700">사업재편 전략 수립 (신사업 발굴)</span>
                             </label>
-                            <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                <input type="checkbox" name="support_areas" value="직무 분석 및 인력 재배치 설계" class="mr-3">
-                                <span>직무 분석 및 인력 재배치 설계</span>
+                            <label class="flex items-center p-4 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer border-2 border-transparent hover:border-[#004ea2] transition-all">
+                                <input type="checkbox" name="support_areas" value="직무 분석 및 인력 재배치 설계" class="mr-3 w-5 h-5 text-[#004ea2] rounded focus:ring-[#004ea2]">
+                                <span class="font-medium text-slate-700">직무 분석 및 인력 재배치 설계</span>
                             </label>
-                            <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                <input type="checkbox" name="support_areas" value="재직자 직무 전환 교육훈련" class="mr-3">
-                                <span>재직자 직무 전환 교육훈련 (AI, 자동화 등)</span>
+                            <label class="flex items-center p-4 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer border-2 border-transparent hover:border-[#004ea2] transition-all">
+                                <input type="checkbox" name="support_areas" value="재직자 직무 전환 교육훈련" class="mr-3 w-5 h-5 text-[#004ea2] rounded focus:ring-[#004ea2]">
+                                <span class="font-medium text-slate-700">재직자 직무 전환 교육훈련 (AI, 자동화 등)</span>
                             </label>
-                            <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                <input type="checkbox" name="support_areas" value="고용안정 장려금 및 인건비 지원 신청" class="mr-3">
-                                <span>고용안정 장려금 및 인건비 지원 신청</span>
+                            <label class="flex items-center p-4 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer border-2 border-transparent hover:border-[#004ea2] transition-all">
+                                <input type="checkbox" name="support_areas" value="고용안정 장려금 및 인건비 지원 신청" class="mr-3 w-5 h-5 text-[#004ea2] rounded focus:ring-[#004ea2]">
+                                <span class="font-medium text-slate-700">고용안정 장려금 및 인건비 지원 신청</span>
                             </label>
-                            <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                <input type="checkbox" name="support_areas" value="스마트공장/설비 도입 자금 연계" class="mr-3">
-                                <span>스마트공장/설비 도입 자금 연계</span>
+                            <label class="flex items-center p-4 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer border-2 border-transparent hover:border-[#004ea2] transition-all">
+                                <input type="checkbox" name="support_areas" value="스마트공장/설비 도입 자금 연계" class="mr-3 w-5 h-5 text-[#004ea2] rounded focus:ring-[#004ea2]">
+                                <span class="font-medium text-slate-700">스마트공장/설비 도입 자금 연계</span>
                             </label>
-                            <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                <input type="checkbox" name="support_areas" value="노사 상생 협약 및 조직문화 개선" class="mr-3">
-                                <span>노사 상생 협약 및 조직문화 개선</span>
+                            <label class="flex items-center p-4 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer border-2 border-transparent hover:border-[#004ea2] transition-all">
+                                <input type="checkbox" name="support_areas" value="노사 상생 협약 및 조직문화 개선" class="mr-3 w-5 h-5 text-[#004ea2] rounded focus:ring-[#004ea2]">
+                                <span class="font-medium text-slate-700">노사 상생 협약 및 조직문화 개선</span>
                             </label>
                         </div>
                     </div>
 
                     <!-- 컨설팅 신청 -->
-                    <div class="border-b pb-6">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4">
-                            <i class="fas fa-clipboard-check mr-2 text-blue-600"></i>
-                            12. 산업·일자리전환 컨설팅 신청
-                        </h2>
-                        <p class="text-sm text-gray-600 mb-4">
-                            고용노동부와 한국표준협회가 전액 무료로 지원하는 컨설팅을 신청하시겠습니까?
-                        </p>
-                        <div class="space-y-2">
-                            <label class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 cursor-pointer">
-                                <input type="radio" name="consulting_application" value="true" required class="mr-3">
-                                <span class="font-medium text-green-700">네, 신청합니다.</span>
+                    <div class="section-card p-8">
+                        <div class="flex items-center mb-6 pb-4 border-b border-slate-100">
+                            <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-clipboard-check text-[#004ea2] text-xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-900">컨설팅 신청</h2>
+                                <p class="text-sm text-slate-500 mt-1">산업·일자리전환 무료 컨설팅 신청 여부</p>
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 border-l-4 border-[#004ea2] p-4 mb-6 rounded-r-lg">
+                            <p class="text-sm text-slate-700">
+                                <i class="fas fa-info-circle text-[#004ea2] mr-2"></i>
+                                고용노동부와 한국표준협회가 <span class="font-bold text-[#004ea2]">전액 무료</span>로 지원하는 컨설팅을 신청하시겠습니까?
+                            </p>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <label class="flex items-center p-5 bg-gradient-to-br from-green-50 to-blue-50 rounded-xl hover:from-green-100 hover:to-blue-100 cursor-pointer border-2 border-transparent hover:border-green-500 transition-all">
+                                <input type="radio" name="consulting_application" value="true" required class="mr-4 w-5 h-5 text-green-600 focus:ring-green-500">
+                                <div>
+                                    <span class="font-bold text-green-700 text-lg block">네, 신청합니다</span>
+                                    <span class="text-xs text-green-600">무료 컨설팅을 받고 싶습니다</span>
+                                </div>
                             </label>
-                            <label class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
-                                <input type="radio" name="consulting_application" value="false" required class="mr-3">
-                                <span>아니오.</span>
+                            <label class="flex items-center p-5 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer border-2 border-transparent hover:border-slate-300 transition-all">
+                                <input type="radio" name="consulting_application" value="false" required class="mr-4 w-5 h-5 text-slate-600 focus:ring-slate-500">
+                                <div>
+                                    <span class="font-medium text-slate-700 text-lg block">아니오</span>
+                                    <span class="text-xs text-slate-500">진단 결과만 받겠습니다</span>
+                                </div>
                             </label>
                         </div>
                     </div>
 
                     <!-- 담당자 정보 -->
-                    <div>
-                        <h2 class="text-xl font-bold text-gray-800 mb-4">
-                            <i class="fas fa-user mr-2 text-blue-600"></i>
-                            담당자 정보
-                        </h2>
-                        <div class="grid md:grid-cols-2 gap-4">
+                    <div class="section-card p-8">
+                        <div class="flex items-center mb-6 pb-4 border-b border-slate-100">
+                            <div class="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-user text-purple-600 text-xl"></i>
+                            </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">13. 담당자 성함 *</label>
+                                <h2 class="text-2xl font-bold text-slate-900">담당자 정보</h2>
+                                <p class="text-sm text-slate-500 mt-1">리포트를 받으실 담당자 정보를 입력해 주세요</p>
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">13. 담당자 성함 <span class="text-red-500">*</span></label>
                                 <input type="text" name="contact_name" required 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">직함</label>
+                                <label class="block text-sm font-bold text-slate-700 mb-2">직함</label>
                                 <input type="text" name="contact_position" 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">14. 이메일 주소 *</label>
-                                <input type="email" name="contact_email" required 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <label class="block text-sm font-bold text-slate-700 mb-2">14. 이메일 주소 <span class="text-red-500">*</span></label>
+                                <input type="email" name="contact_email" required placeholder="example@company.com"
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">15. 전화번호 *</label>
-                                <input type="tel" name="contact_phone" required 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <label class="block text-sm font-bold text-slate-700 mb-2">15. 전화번호 <span class="text-red-500">*</span></label>
+                                <input type="tel" name="contact_phone" required placeholder="010-0000-0000"
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-[#004ea2] focus:border-[#004ea2] transition-all">
                             </div>
                         </div>
                     </div>
 
                     <!-- 제출 버튼 -->
-                    <div class="pt-6">
+                    <div class="text-center">
                         <button type="submit" 
-                            class="w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-bold text-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
-                            <i class="fas fa-paper-plane mr-2"></i>
+                            class="inline-flex items-center justify-center px-12 py-5 bg-[#004ea2] hover:bg-[#003d80] text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                            <i class="fas fa-paper-plane mr-3"></i>
                             설문 제출 및 리포트 받기
                         </button>
+                        <p class="text-sm text-slate-500 mt-4">
+                            <i class="fas fa-lock mr-1"></i>
+                            입력하신 정보는 안전하게 보호됩니다
+                        </p>
                     </div>
                 </form>
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-sm mt-12">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <p class="text-xs">
+                    <span class="font-bold text-slate-300">위탁기관</span> 고용노동부 
+                    <span class="mx-2 text-slate-700">|</span> 
+                    <span class="font-bold text-slate-300">운영기관</span> 한국표준협회 산업일자리전환지원센터
+                </p>
+            </div>
+        </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
         <script src="/static/survey.js"></script>
