@@ -908,14 +908,14 @@ app.get('/', (c) => {
                     <header className={\`sticky top-0 z-50 bg-white transition-all duration-300 \${scrolled ? 'shadow-md py-2' : 'border-b border-slate-100 py-4'}\`}>
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                {/* KSA Official Logo - SVG Recreation */}
-                                <svg className="h-8 md:h-12 w-auto" viewBox="0 0 500 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    {/* KSA Text */}
-                                    <text x="5" y="55" fontFamily="Georgia, serif" fontSize="60" fontWeight="bold" fill="#004d5c" letterSpacing="-2">KSA</text>
-                                    {/* Korean Text */}
-                                    <text x="175" y="35" fontFamily="Noto Sans KR, Arial, sans-serif" fontSize="22" fontWeight="700" fill="#2d2d2d">한국표준협회</text>
-                                    {/* English Text */}
-                                    <text x="175" y="60" fontFamily="Arial, sans-serif" fontSize="12" fontWeight="500" fill="#2d2d2d" letterSpacing="0.5">KOREAN STANDARDS ASSOCIATION</text>
+                                {/* KSA Official Logo - Updated */}
+                                <svg className="h-8 md:h-12 w-auto" viewBox="0 0 480 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    {/* KSA Text - Teal/Dark Green */}
+                                    <text x="5" y="55" fontFamily="Georgia, Times New Roman, serif" fontSize="58" fontWeight="bold" fill="#006666" letterSpacing="-1">KSA</text>
+                                    {/* Korean Text - Dark Gray */}
+                                    <text x="165" y="35" fontFamily="Noto Sans KR, Malgun Gothic, sans-serif" fontSize="20" fontWeight="600" fill="#333333">한국표준협회</text>
+                                    {/* English Text - Dark Gray */}
+                                    <text x="165" y="57" fontFamily="Arial, sans-serif" fontSize="11" fontWeight="400" fill="#333333" letterSpacing="0.3">KOREAN STANDARDS ASSOCIATION</text>
                                 </svg>
                                 <span className="hidden md:inline text-slate-300 mx-2">|</span>
                                 <span className="hidden md:inline text-lg font-bold text-slate-800 pt-1">산업일자리전환지원센터</span>
@@ -1447,10 +1447,10 @@ app.get('/survey', (c) => {
         <header class="bg-white border-b border-slate-200 py-4 sticky top-0 z-50 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
                 <a href="/" class="flex items-center gap-3">
-                    <svg class="h-8 md:h-10 w-auto" viewBox="0 0 500 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <text x="5" y="55" fontFamily="Georgia, serif" fontSize="60" fontWeight="bold" fill="#004d5c" letterSpacing="-2">KSA</text>
-                        <text x="175" y="35" fontFamily="Noto Sans KR, Arial, sans-serif" fontSize="22" fontWeight="700" fill="#2d2d2d">한국표준협회</text>
-                        <text x="175" y="60" fontFamily="Arial, sans-serif" fontSize="12" fontWeight="500" fill="#2d2d2d" letterSpacing="0.5">KOREAN STANDARDS ASSOCIATION</text>
+                    <svg class="h-8 md:h-10 w-auto" viewBox="0 0 480 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <text x="5" y="55" fontFamily="Georgia, Times New Roman, serif" fontSize="58" fontWeight="bold" fill="#006666" letterSpacing="-1">KSA</text>
+                        <text x="165" y="35" fontFamily="Noto Sans KR, Malgun Gothic, sans-serif" fontSize="20" fontWeight="600" fill="#333333">한국표준협회</text>
+                        <text x="165" y="57" fontFamily="Arial, sans-serif" fontSize="11" fontWeight="400" fill="#333333" letterSpacing="0.3">KOREAN STANDARDS ASSOCIATION</text>
                     </svg>
                 </a>
                 <a href="/" class="text-sm font-medium text-slate-600 hover:text-[#004ea2] transition-colors">
