@@ -908,15 +908,8 @@ app.get('/', (c) => {
                     <header className={\`sticky top-0 z-50 bg-white transition-all duration-300 \${scrolled ? 'shadow-md py-2' : 'border-b border-slate-100 py-4'}\`}>
                         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                {/* KSA Official Logo - Larger Size */}
-                                <svg className="h-16 md:h-20 w-auto" viewBox="0 0 480 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    {/* KSA Text - Teal/Dark Green */}
-                                    <text x="5" y="55" fontFamily="Georgia, Times New Roman, serif" fontSize="58" fontWeight="bold" fill="#006666" letterSpacing="-1">KSA</text>
-                                    {/* Korean Text - Dark Gray */}
-                                    <text x="165" y="35" fontFamily="Noto Sans KR, Malgun Gothic, sans-serif" fontSize="20" fontWeight="600" fill="#333333">한국표준협회</text>
-                                    {/* English Text - Dark Gray */}
-                                    <text x="165" y="57" fontFamily="Arial, sans-serif" fontSize="11" fontWeight="400" fill="#333333" letterSpacing="0.3">KOREAN STANDARDS ASSOCIATION</text>
-                                </svg>
+                                {/* KSA Official Logo Image */}
+                                <img src="/static/ksa-logo-official.jpg" alt="KSA 한국표준협회" className="h-16 md:h-20 w-auto" />
                                 <span className="hidden md:inline text-slate-300 mx-2">|</span>
                                 <span className="hidden md:inline text-lg font-bold text-slate-800 pt-1">산업일자리전환지원센터</span>
                             </div>
@@ -1447,11 +1440,7 @@ app.get('/survey', (c) => {
         <header class="bg-white border-b border-slate-200 py-4 sticky top-0 z-50 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
                 <a href="/" class="flex items-center gap-3">
-                    <svg class="h-16 md:h-20 w-auto" viewBox="0 0 480 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <text x="5" y="55" fontFamily="Georgia, Times New Roman, serif" fontSize="58" fontWeight="bold" fill="#006666" letterSpacing="-1">KSA</text>
-                        <text x="165" y="35" fontFamily="Noto Sans KR, Malgun Gothic, sans-serif" fontSize="20" fontWeight="600" fill="#333333">한국표준협회</text>
-                        <text x="165" y="57" fontFamily="Arial, sans-serif" fontSize="11" fontWeight="400" fill="#333333" letterSpacing="0.3">KOREAN STANDARDS ASSOCIATION</text>
-                    </svg>
+                    <img src="/static/ksa-logo-official.jpg" alt="KSA 한국표준협회" class="h-16 md:h-20 w-auto" />
                 </a>
                 <a href="/" class="text-sm font-medium text-slate-600 hover:text-[#004ea2] transition-colors">
                     <i class="fas fa-home mr-1"></i> 포털로 돌아가기
