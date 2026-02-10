@@ -124,6 +124,7 @@ app.post('/api/survey', async (c) => {
         await resend.emails.send({
           from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
           to: [data.contact_email],
+          reply_to: ['ksawork02@ksa.or.kr'],
           subject: emailSubject,
           html: emailHTML,
           text: emailText
@@ -742,6 +743,7 @@ app.post('/api/send-email/:id', adminAuth, async (c) => {
     const emailResult = await resend.emails.send({
       from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
       to: [survey.contact_email],
+      reply_to: ['ksawork02@ksa.or.kr'],
       subject: emailSubject,
       html: emailHTML,
       text: emailText
