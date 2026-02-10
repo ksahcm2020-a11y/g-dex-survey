@@ -22,7 +22,17 @@
 
 ## 🌐 URL
 
-### 샌드박스 개발 서버
+### 프로덕션 배포
+- **메인 페이지**: https://g-dex-survey.pages.dev/ (자동으로 /survey로 리다이렉트)
+- **설문 페이지**: https://g-dex-survey.pages.dev/survey
+- **관리자 로그인**: https://g-dex-survey.pages.dev/admin/login
+- **관리자 대시보드**: https://g-dex-survey.pages.dev/admin (비밀번호: `gdax2026!`)
+- **리포트 예시**: https://g-dex-survey.pages.dev/report/1
+- **GitHub 저장소**: https://github.com/ksahcm2020-a11y/g-dex-survey
+- **배포 상태**: ✅ 정상 운영 중
+- **⚠️ 메일 발송 상태**: ❌ 환경 변수 설정 필요 (아래 참고)
+
+### 샌드박스 개발 서버 (로컬 테스트용)
 - **메인 페이지 (설문조사)**: https://3000-iidpghw09cie87fc4o7jc-0e616f0a.sandbox.novita.ai/
 - **관리자 로그인**: https://3000-iidpghw09cie87fc4o7jc-0e616f0a.sandbox.novita.ai/admin/login
 - **관리자 대시보드**: https://3000-iidpghw09cie87fc4o7jc-0e616f0a.sandbox.novita.ai/admin (비밀번호: `gdax2026!`)
@@ -30,8 +40,11 @@
 
 ### 프로덕션 배포
 - **배포 플랫폼**: Cloudflare Pages
-- **배포 상태**: ⏳ 준비 완료 (배포 대기)
-- **배포 명령어**: `npm run deploy:prod`
+- **프로덕션 URL**: https://g-dex-survey.pages.dev/
+- **GitHub 저장소**: https://github.com/ksahcm2020-a11y/g-dex-survey
+- **배포 상태**: ✅ 정상 운영 중
+- **배포 방식**: GitHub 연동 자동 배포
+- **⚠️ 중요**: 메일 발송을 위해 Cloudflare Dashboard에서 환경 변수 설정 필요 (CLOUDFLARE_ENV_SETUP.md 참고)
 
 ## 🎯 G-DAX 진단 모델
 
@@ -256,6 +269,49 @@ webapp/
 ├── EMAIL_SETUP.md             # 이메일 설정 가이드
 └── seed.sql                   # 테스트 데이터
 ```
+
+## 📧 이메일 발송 설정 (중요!)
+
+### ⚠️ 메일 발송이 작동하지 않는 이유
+Cloudflare Pages 프로덕션 환경에 **환경 변수가 설정되지 않았습니다**.
+
+### 필요한 환경 변수
+1. **RESEND_API_KEY**: `re_Ms3UnGiz_NiNc71xowQtBUyRrMNBX6ZGd`
+2. **BASE_URL**: `https://g-dex-survey.pages.dev`
+3. **ADMIN_PASSWORD**: `gdax2026!` (선택사항)
+
+### 설정 방법
+
+#### 1단계: Cloudflare Dashboard 접속
+1. https://dash.cloudflare.com/ 접속 및 로그인
+2. 좌측 메뉴 "Workers & Pages" 클릭
+3. "g-dex-survey" 프로젝트 선택
+
+#### 2단계: 환경 변수 추가
+1. "Settings" 탭 클릭
+2. "Environment variables" 섹션으로 스크롤
+3. "Add variable" 버튼 클릭하여 아래 3개 변수 추가:
+
+| Variable name | Value | Environment |
+|--------------|-------|-------------|
+| RESEND_API_KEY | `re_Ms3UnGiz_NiNc71xowQtBUyRrMNBX6ZGd` | Production ✓ |
+| BASE_URL | `https://g-dex-survey.pages.dev` | Production ✓ |
+| ADMIN_PASSWORD | `gdax2026!` | Production ✓ |
+
+#### 3단계: 재배포
+- GitHub에 새 커밋 푸시 (자동 재배포)
+- 또는 Cloudflare Dashboard > "View deployment" > "Retry deployment"
+
+#### 4단계: 확인
+1. https://g-dex-survey.pages.dev/survey 접속
+2. 설문 작성 및 제출
+3. 이메일 수신 확인
+
+### 상세 가이드
+- 자세한 설정 방법: `CLOUDFLARE_ENV_SETUP.md` 참고
+- Resend 계정: https://resend.com/api-keys
+
+---
 
 ## 🚀 배포 방법
 
