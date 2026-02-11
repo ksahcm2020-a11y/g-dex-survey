@@ -122,8 +122,8 @@ app.post('/api/survey', async (c) => {
         // Resend로 이메일 발송
         const resend = new Resend(c.env.RESEND_API_KEY)
         await resend.emails.send({
-          from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
-          to: [data.contact_email],
+          from: 'G-DAX 진단시스템 <ksawork02@ksa.or.kr>',
+          to: ['ksawork02@ksa.or.kr'],
           reply_to: ['ksawork02@ksa.or.kr'],
           subject: emailSubject,
           html: emailHTML,
@@ -741,8 +741,8 @@ app.post('/api/send-email/:id', adminAuth, async (c) => {
     // Resend로 이메일 발송
     const resend = new Resend(c.env.RESEND_API_KEY)
     const emailResult = await resend.emails.send({
-      from: 'G-DAX 진단시스템 <onboarding@resend.dev>',
-      to: [survey.contact_email],
+      from: 'G-DAX 진단시스템 <ksawork02@ksa.or.kr>',
+      to: ['ksawork02@ksa.or.kr'],
       reply_to: ['ksawork02@ksa.or.kr'],
       subject: emailSubject,
       html: emailHTML,
