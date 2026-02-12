@@ -1201,6 +1201,7 @@ app.get('/report/:id', (c) => {
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
         <style>
           body { font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; }
           @media print {
@@ -1214,6 +1215,9 @@ app.get('/report/:id', (c) => {
                 <div id="reportContent"></div>
                 
                 <div class="mt-8 no-print flex gap-4">
+                    <button onclick="downloadPDF()" class="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700">
+                        <i class="fas fa-file-pdf mr-2"></i>PDF 다운로드
+                    </button>
                     <button onclick="window.print()" class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700">
                         <i class="fas fa-print mr-2"></i>인쇄하기
                     </button>

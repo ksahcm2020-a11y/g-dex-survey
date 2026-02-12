@@ -571,3 +571,69 @@ function renderMatrixChart(report) {
 
 // 페이지 로드 시 리포트 불러오기
 loadReport();
+
+// PDF 다운로드 함수
+async function downloadPDF() {
+  // 버튼 비활성화
+  const buttons = document.querySelectorAll('.no-print button');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    btn.classList.add('opacity-50', 'cursor-not-allowed');
+  });
+  
+  // 로딩 메시지 표시
+  const originalText = buttons[0].innerHTML;
+  buttons[0].innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>PDF 생성중...';
+  
+  try {
+    // PDF 생성 옵션
+    const element = document.getElementById('reportContent');
+    const opt = {
+      margin: [10, 10, 10, 10],
+      filename: `G-DAX_진단리포트_${surveyId}_${new Date().toISOString().split('T')[0]}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { 
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        letterRendering: true,
+        allowTaint: true
+      },
+      jsPDF: { 
+        unit: 'mm', 
+        format: 'a4', 
+        orientation: 'portrait',
+        compress: true
+      },
+      pagebreak: { 
+        mode: ['avoid-all', 'css', 'legacy'],
+        before: '.page-break-before',
+        after: '.page-break-after'
+      }
+    };
+    
+    // PDF 생성 및 다운로드
+    await html2pdf().set(opt).from(element).save();
+    
+    // 성공 메시지
+    buttons[0].innerHTML = '<i class="fas fa-check mr-2"></i>다운로드 완료!';
+    setTimeout(() => {
+      buttons[0].innerHTML = originalText;
+      buttons.forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+      });
+    }, 2000);
+    
+  } catch (error) {
+    console.error('PDF generation error:', error);
+    alert('PDF 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+    
+    // 버튼 복원
+    buttons[0].innerHTML = originalText;
+    buttons.forEach(btn => {
+      btn.disabled = false;
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    });
+  }
+}
