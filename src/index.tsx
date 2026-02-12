@@ -1204,9 +1204,26 @@ app.get('/report/:id', (c) => {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
         <style>
           body { font-family: '맑은 고딕', 'Malgun Gothic', sans-serif; }
+          
+          /* PDF 및 인쇄 최적화 */
           @media print {
-            .no-print { display: none; }
+            .no-print { display: none !important; }
+            body { margin: 0; padding: 0; }
+            .max-w-4xl { max-width: 100%; }
+            .py-8, .px-4 { padding: 0; }
+            .shadow-lg { box-shadow: none; }
           }
+          
+          /* 페이지 브레이크 제어 */
+          .page-break-before { page-break-before: always; }
+          .page-break-after { page-break-after: always; }
+          .no-break { page-break-inside: avoid; }
+          
+          /* 2페이지 레이아웃 최적화 */
+          #reportContent > div { margin-bottom: 1rem; }
+          #reportContent h2 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+          #reportContent h3 { font-size: 1.1rem; }
+          #reportContent p { font-size: 0.9rem; line-height: 1.4; }
         </style>
     </head>
     <body class="bg-gray-50">

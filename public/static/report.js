@@ -11,7 +11,7 @@ async function loadReport() {
     document.getElementById('reportContent').innerHTML = `
       <div class="text-center py-12">
         <i class="fas fa-exclamation-circle text-6xl text-red-500 mb-4"></i>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">리포트를 불러올 수 없습니다</h2>
+        <h2 class="text-lg font-bold text-gray-800 mb-2">리포트를 불러올 수 없습니다</h2>
         <p class="text-gray-600">${error.response?.data?.error || error.message}</p>
       </div>
     `;
@@ -33,28 +33,28 @@ function renderReport(report) {
         <div class="grid grid-cols-2 gap-4 text-left">
           <div>
             <p class="text-blue-200 text-sm mb-1">수신</p>
-            <p class="text-xl font-bold">${report.company_name}</p>
+            <p class="text-lg font-bold">${report.company_name}</p>
             <p class="text-lg">${report.ceo_name} 님 귀중</p>
           </div>
           <div>
             <p class="text-blue-200 text-sm mb-1">진단일</p>
-            <p class="text-xl font-bold">${report.diagnosis_date}</p>
+            <p class="text-lg font-bold">${report.diagnosis_date}</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 2. 종합 진단 결과 -->
-    <div class="bg-white border-4 rounded-lg p-8 mb-8" style="border-color: ${report.typeColor};">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">
+    <div class="bg-white border-4 rounded-lg p-4 mb-4" style="border-color: ${report.typeColor};">
+      <h2 class="text-lg font-bold text-gray-800 mb-6">
         <i class="fas fa-clipboard-check mr-2"></i>
         종합 진단 결과
       </h2>
       
-      <div class="bg-gray-50 rounded-lg p-6 mb-6">
+      <div class="bg-gray-50 rounded-lg p-3 mb-3">
         <p class="text-lg mb-4">
           "<strong>${report.company_name}</strong>의 진단 결과는 
-          <span class="text-2xl font-bold px-4 py-2 rounded inline-block" style="background-color: ${report.typeColor}; color: white;">
+          <span class="text-lg font-bold px-4 py-2 rounded inline-block" style="background-color: ${report.typeColor}; color: white;">
             ${report.diagnosisType}
           </span> 
           입니다."
@@ -66,12 +66,12 @@ function renderReport(report) {
 
       <!-- G-DAX 4분면 매트릭스 -->
       <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
-        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">
+        <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">
           <i class="fas fa-chart-area mr-2 text-blue-600"></i>
           G-DAX 4분면 위치 확인
         </h3>
         
-        <div class="relative" style="height: 500px;">
+        <div class="relative" style="height: 350px;">
           <canvas id="matrixChart"></canvas>
         </div>
         
@@ -79,7 +79,7 @@ function renderReport(report) {
           <div class="bg-red-50 border-2 border-red-500 rounded-lg p-4">
             <div class="flex items-center justify-between mb-2">
               <span class="text-sm font-medium text-gray-700">탄소 리스크 (X축)</span>
-              <span class="text-2xl font-bold text-red-600">${report.climateRiskPercent}점</span>
+              <span class="text-lg font-bold text-red-600">${report.climateRiskPercent}점</span>
             </div>
             <div class="text-sm text-gray-600">
               <strong>${report.scores.climateTotal}점</strong> / 15점 만점
@@ -90,7 +90,7 @@ function renderReport(report) {
           <div class="bg-blue-50 border-2 border-blue-500 rounded-lg p-4">
             <div class="flex items-center justify-between mb-2">
               <span class="text-sm font-medium text-gray-700">디지털 시급성 (Y축)</span>
-              <span class="text-2xl font-bold text-blue-600">${report.digitalUrgencyPercent}점</span>
+              <span class="text-lg font-bold text-blue-600">${report.digitalUrgencyPercent}점</span>
             </div>
             <div class="text-sm text-gray-600">
               <strong>${report.scores.digitalTotal}점</strong> / 15점 만점
@@ -102,15 +102,15 @@ function renderReport(report) {
     </div>
 
     <!-- 3. 상세 분석 및 이슈 도출 -->
-    <div class="bg-white border-2 border-gray-200 rounded-lg p-8 mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">
+    <div class="bg-white border-2 border-gray-200 rounded-lg p-4 mb-4">
+      <h2 class="text-lg font-bold text-gray-800 mb-6">
         <i class="fas fa-search mr-2 text-blue-600"></i>
         상세 분석 및 이슈 도출
       </h2>
 
       <!-- 환경(Green) 리스크 분석 -->
       <div class="mb-6 pb-6 border-b">
-        <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
           <i class="fas fa-leaf mr-2 text-green-600"></i>
           ① 환경(Green) 리스크 분석
         </h3>
@@ -132,7 +132,7 @@ function renderReport(report) {
 
       <!-- 디지털(Digital) 역량 분석 -->
       <div class="mb-6 pb-6 border-b">
-        <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
           <i class="fas fa-microchip mr-2 text-blue-600"></i>
           ② 디지털(Digital) 역량 분석
         </h3>
@@ -154,7 +154,7 @@ function renderReport(report) {
 
       <!-- 고용(HR) 및 일자리 충격 분석 -->
       <div>
-        <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+        <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
           <i class="fas fa-users mr-2 text-purple-600"></i>
           ③ 고용(HR) 및 일자리 충격 분석
         </h3>
@@ -191,8 +191,8 @@ function renderReport(report) {
     </div>
 
     <!-- 4. 맞춤형 솔루션 처방 -->
-    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-8 mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-4 mb-4">
+      <h2 class="text-lg font-bold text-gray-800 mb-6">
         <i class="fas fa-prescription-bottle mr-2 text-blue-600"></i>
         맞춤형 솔루션 처방
       </h2>
@@ -200,7 +200,7 @@ function renderReport(report) {
       <!-- STEP 1: 비즈니스 솔루션 -->
       <div class="mb-8">
         <div class="bg-blue-600 text-white px-4 py-2 rounded-t-lg">
-          <h3 class="text-xl font-bold flex items-center">
+          <h3 class="text-lg font-bold flex items-center">
             <i class="fas fa-briefcase mr-2"></i>
             STEP 1. 비즈니스 솔루션: 사업재편
           </h3>
@@ -231,7 +231,7 @@ function renderReport(report) {
       <!-- STEP 2: HR 솔루션 -->
       <div class="mb-8">
         <div class="bg-purple-600 text-white px-4 py-2 rounded-t-lg">
-          <h3 class="text-xl font-bold flex items-center">
+          <h3 class="text-lg font-bold flex items-center">
             <i class="fas fa-users-cog mr-2"></i>
             STEP 2. HR 솔루션: 노동전환 고용안정
           </h3>
@@ -252,7 +252,7 @@ function renderReport(report) {
       <!-- STEP 3: 정부 지원사업 매칭 -->
       <div>
         <div class="bg-green-600 text-white px-4 py-2 rounded-t-lg">
-          <h3 class="text-xl font-bold flex items-center">
+          <h3 class="text-lg font-bold flex items-center">
             <i class="fas fa-landmark mr-2"></i>
             STEP 3. 정부 지원사업 매칭 (Policy Bridge)
           </h3>
@@ -280,7 +280,7 @@ function renderReport(report) {
     </div>
 
     <!-- 안내 메시지 -->
-    <div class="bg-blue-50 border-2 border-blue-500 rounded-lg p-6 mb-6">
+    <div class="bg-blue-50 border-2 border-blue-500 rounded-lg p-3 mb-3">
       <div class="flex items-start gap-3">
         <i class="fas fa-info-circle text-2xl text-blue-600 mt-1"></i>
         <div>
