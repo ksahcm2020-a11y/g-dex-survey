@@ -23,14 +23,13 @@ function renderReport(report) {
   
   const html = `
     <!-- 1. 표지 (Cover Page) -->
-    <div class="bg-gradient-to-br from-blue-900 to-blue-700 text-white rounded-lg p-12 mb-8 text-center">
-      <div class="mb-6">
-        <i class="fas fa-industry text-6xl mb-4"></i>
-        <h1 class="text-4xl font-bold mb-2">G-DAX 산업·일자리 전환 진단 리포트</h1>
-        <p class="text-xl text-blue-100">Job Transition Diagnosis Report</p>
+    <div class="bg-gradient-to-br from-blue-900 to-blue-700 text-white rounded-lg p-8 mb-6 text-center page-break-after">
+      <div class="mb-4">
+        <i class="fas fa-industry text-5xl mb-3"></i>
+        <h1 class="text-3xl font-bold mb-2">산업일자리전환 컨설팅 사전진단 보고서</h1>
       </div>
       
-      <div class="bg-white/10 backdrop-blur rounded-lg p-6 max-w-2xl mx-auto">
+      <div class="bg-white/10 backdrop-blur rounded-lg p-4 max-w-2xl mx-auto">
         <div class="grid grid-cols-2 gap-4 text-left">
           <div>
             <p class="text-blue-200 text-sm mb-1">수신</p>
@@ -41,9 +40,6 @@ function renderReport(report) {
             <p class="text-blue-200 text-sm mb-1">진단일</p>
             <p class="text-xl font-bold">${report.diagnosis_date}</p>
           </div>
-        </div>
-        <div class="mt-4 pt-4 border-t border-white/20 text-sm">
-          <p class="text-blue-100">주관: 고용노동부 / 한국표준협회</p>
         </div>
       </div>
     </div>
@@ -283,92 +279,24 @@ function renderReport(report) {
       </div>
     </div>
 
-    <!-- 5. 향후 추진 계획 -->
-    <div class="bg-white border-2 border-gray-200 rounded-lg p-8 mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">
-        <i class="fas fa-calendar-check mr-2 text-blue-600"></i>
-        향후 추진 계획
-      </h2>
-
-      <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded mb-6">
-        <p class="text-lg text-gray-800 mb-4">
-          귀하께서 선택하신 
-          <strong class="text-blue-600">"${report.support_areas.join(', ')}"</strong> 
-          지원 분야 니즈를 반영하여, 전문 컨설턴트가 <strong class="text-red-600">3일 이내</strong>에 연락드릴 예정입니다.
-        </p>
-        
-        <div class="grid md:grid-cols-2 gap-4 mb-4">
-          <div class="bg-white rounded-lg p-4">
-            <p class="text-sm text-gray-600 mb-1">담당 컨설턴트</p>
-            <p class="text-xl font-bold text-gray-800">
-              <i class="fas fa-user-tie mr-2 text-blue-600"></i>
-              G-DAX 전문위원
-            </p>
-          </div>
-          <div class="bg-white rounded-lg p-4">
-            <p class="text-sm text-gray-600 mb-1">연락처</p>
-            <p class="text-xl font-bold text-gray-800">
-              <i class="fas fa-phone mr-2 text-green-600"></i>
-              010-1234-5678
-            </p>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-lg p-4">
-          <p class="text-sm text-gray-600 mb-2">다음 절차</p>
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
-              1. 방문 인터뷰
-            </span>
-            <i class="fas fa-arrow-right text-gray-400"></i>
-            <span class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
-              2. 심층 진단
-            </span>
-            <i class="fas fa-arrow-right text-gray-400"></i>
-            <span class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
-              3. 이행 계획 수립
-            </span>
-          </div>
+    <!-- 안내 메시지 -->
+    <div class="bg-blue-50 border-2 border-blue-500 rounded-lg p-6 mb-6">
+      <div class="flex items-start gap-3">
+        <i class="fas fa-info-circle text-2xl text-blue-600 mt-1"></i>
+        <div>
+          <p class="text-lg font-bold text-gray-800 mb-2">본 보고서 저장 안내</p>
+          <p class="text-gray-700 leading-relaxed">
+            본 보고서는 산업일자리전환 컨설팅 신청 시 첨부되어야 하므로, 
+            하단의 <strong class="text-blue-600">PDF 다운로드</strong> 또는 <strong class="text-blue-600">인쇄하기</strong> 버튼을 눌러 PDF로 저장하시기 바랍니다.
+          </p>
         </div>
       </div>
-
-      ${report.consulting_application ? `
-        <div class="bg-green-50 border-2 border-green-500 rounded-lg p-6">
-          <h3 class="text-xl font-bold text-green-800 mb-2 flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
-            산업·일자리전환 컨설팅 신청 완료
-          </h3>
-          <p class="text-gray-700">
-            고용노동부와 한국표준협회가 전액 무료로 지원하는 컨설팅을 신청하셨습니다. 
-            담당자가 ${report.contact_name} ${report.contact_position || '님'}께 곧 연락드릴 예정입니다.
-          </p>
-        </div>
-      ` : `
-        <div class="bg-gray-50 border-2 border-gray-300 rounded-lg p-6">
-          <h3 class="text-xl font-bold text-gray-800 mb-2 flex items-center">
-            <i class="fas fa-info-circle mr-2"></i>
-            컨설팅 신청 안내
-          </h3>
-          <p class="text-gray-700 mb-3">
-            아직 컨설팅을 신청하지 않으셨습니다. 
-            고용노동부와 한국표준협회가 전액 무료로 지원하는 전문 컨설팅을 받으실 수 있습니다.
-          </p>
-          <a href="/" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700">
-            <i class="fas fa-pencil-alt mr-2"></i>
-            컨설팅 신청하기
-          </a>
-        </div>
-      `}
     </div>
 
     <!-- 리포트 푸터 -->
-    <div class="text-center text-sm text-gray-500 border-t pt-6">
-      <p class="mb-2">본 진단 결과는 G-DAX (Green-Digital-Aging-eXpert) 모델을 기반으로 자동 생성되었습니다.</p>
+    <div class="text-center text-sm text-gray-500 border-t pt-4">
+      <p class="mb-1">본 진단 결과는 G-DAX (Green-Digital-Aging-eXpert) 모델을 기반으로 자동 생성되었습니다.</p>
       <p>보다 정확한 진단과 맞춤형 솔루션을 원하시면 전문 컨설팅을 신청해 주세요.</p>
-      <p class="mt-4 font-medium text-gray-700">
-        <i class="fas fa-building mr-2"></i>
-        주관: 고용노동부 / 한국표준협회
-      </p>
     </div>
   `;
   
@@ -586,18 +514,21 @@ async function downloadPDF() {
   buttons[0].innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>PDF 생성중...';
   
   try {
-    // PDF 생성 옵션
+    // PDF 생성 옵션 - 2페이지 최적화
     const element = document.getElementById('reportContent');
     const opt = {
-      margin: [10, 10, 10, 10],
-      filename: `G-DAX_진단리포트_${surveyId}_${new Date().toISOString().split('T')[0]}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
+      margin: [8, 8, 8, 8],  // 여백 축소 (상하좌우 8mm)
+      filename: `산업일자리전환_사전진단보고서_${surveyId}_${new Date().toISOString().split('T')[0]}.pdf`,
+      image: { type: 'jpeg', quality: 0.95 },
       html2canvas: { 
-        scale: 2,
+        scale: 1.5,  // 해상도 조정 (2배에서 1.5배로 축소하여 파일 크기 최적화)
         useCORS: true,
         logging: false,
         letterRendering: true,
-        allowTaint: true
+        allowTaint: true,
+        windowWidth: 1200,  // 렌더링 너비 고정
+        scrollY: 0,
+        scrollX: 0
       },
       jsPDF: { 
         unit: 'mm', 
@@ -606,9 +537,10 @@ async function downloadPDF() {
         compress: true
       },
       pagebreak: { 
-        mode: ['avoid-all', 'css', 'legacy'],
+        mode: ['avoid-all', 'css'],  // CSS 페이지 브레이크 우선
         before: '.page-break-before',
-        after: '.page-break-after'
+        after: '.page-break-after',
+        avoid: ['.no-break', 'canvas']  // 차트와 특정 요소는 페이지 나누기 방지
       }
     };
     
@@ -636,4 +568,5 @@ async function downloadPDF() {
       btn.classList.remove('opacity-50', 'cursor-not-allowed');
     });
   }
+}
 }
