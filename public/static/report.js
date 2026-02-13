@@ -22,6 +22,9 @@ async function loadReport() {
 function renderReport(report) {
   const container = document.getElementById('reportContent');
   
+  // 기업명을 전역 변수로 저장 (PDF 파일명에 사용)
+  window.companyName = report.company_name;
+  
   const html = `
     <!-- 1. 표지 (Cover Page) -->
     <div class="bg-gradient-to-br from-blue-900 to-blue-700 text-white rounded-lg p-4 mb-3 text-center page-break-after">
@@ -288,7 +291,7 @@ function renderReport(report) {
           <p class="text-lg font-bold text-gray-800 mb-2">본 보고서 저장 안내</p>
           <p class="text-gray-700 leading-relaxed">
             본 보고서는 산업일자리전환 컨설팅 신청 시 첨부되어야 하므로, 
-            하단의 <strong class="text-blue-600">PDF 다운로드</strong> 또는 <strong class="text-blue-600">인쇄하기</strong> 버튼을 눌러 PDF로 저장하시기 바랍니다.
+            하단의 <strong class="text-blue-600">PDF 다운로드</strong> 버튼을 눌러 PDF로 저장하시기 바랍니다.
           </p>
         </div>
       </div>
@@ -517,19 +520,25 @@ async function downloadPDF() {
   try {
     // PDF 생성 옵션 - A4 2페이지 최적화
     const element = document.getElementById('reportContent');
+    
+    // 기업명을 파일명으로 사용 (window.companyName은 renderReport에서 설정)
+    const companyName = window.companyName || '진단보고서';
+    const filename = `산업일자리전환_준비도진단보고서_${companyName}.pdf`;
+    
     const opt = {
-      margin: [5, 5, 5, 5],  // 여백 최소화 (상하좌우 5mm)
-      filename: `산업일자리전환_준비도진단보고서_${surveyId}_${new Date().toISOString().split('T')[0]}.pdf`,
-      image: { type: 'jpeg', quality: 0.92 },
+      margin: [3, 3, 3, 3],  // 여백 최소화 (상하좌우 3mm)
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.90 },
       html2canvas: { 
-        scale: 1.3,  // 해상도 조정하여 컨텐츠 압축
+        scale: 2.0,  // 해상도 향상
         useCORS: true,
         logging: false,
         letterRendering: true,
-        allowTaint: true,
-        windowWidth: 1100,  // 렌더링 너비 축소
-        scrollY: 0,
-        scrollX: 0
+        allowTaint: false,
+        windowWidth: 900,  // 렌더링 너비 조정
+        scrollY: -window.scrollY,
+        scrollX: -window.scrollX,
+        backgroundColor: '#ffffff'
       },
       jsPDF: { 
         unit: 'mm', 
@@ -538,10 +547,10 @@ async function downloadPDF() {
         compress: true
       },
       pagebreak: { 
-        mode: ['avoid-all', 'css'],  // CSS 페이지 브레이크 우선
+        mode: ['avoid-all', 'css', 'legacy'],
         before: '.page-break-before',
         after: '.page-break-after',
-        avoid: ['.no-break', 'canvas']  // 차트와 특정 요소는 페이지 나누기 방지
+        avoid: ['.no-break', 'canvas', 'table', 'tr', 'thead']
       }
     };
     

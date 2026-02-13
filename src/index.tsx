@@ -1219,11 +1219,18 @@ app.get('/report/:id', (c) => {
           .page-break-after { page-break-after: always; }
           .no-break { page-break-inside: avoid; }
           
-          /* 2페이지 레이아웃 최적화 */
-          #reportContent > div { margin-bottom: 1rem; }
-          #reportContent h2 { font-size: 1.25rem; margin-bottom: 0.75rem; }
-          #reportContent h3 { font-size: 1.1rem; }
-          #reportContent p { font-size: 0.9rem; line-height: 1.4; }
+          /* 2페이지 PDF 레이아웃 최적화 */
+          #reportContent > div { margin-bottom: 0.5rem; padding: 0.5rem; }
+          #reportContent h1 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+          #reportContent h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+          #reportContent h3 { font-size: 1rem; margin-bottom: 0.3rem; }
+          #reportContent p { font-size: 0.8rem; line-height: 1.3; margin-bottom: 0.3rem; }
+          #reportContent .border-4 { border-width: 2px; }
+          #reportContent .p-6 { padding: 1rem; }
+          #reportContent .p-4 { padding: 0.5rem; }
+          #reportContent .mb-6 { margin-bottom: 0.5rem; }
+          #reportContent .mb-4 { margin-bottom: 0.4rem; }
+          #reportContent .mb-3 { margin-bottom: 0.3rem; }
         </style>
     </head>
     <body class="bg-gray-50">
@@ -1232,10 +1239,10 @@ app.get('/report/:id', (c) => {
                 <div id="reportContent"></div>
                 
                 <div class="mt-8 no-print flex gap-4">
-                    <button onclick="downloadPDF()" class="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700">
+                    <button onclick="downloadPDF()" class="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors">
                         <i class="fas fa-file-pdf mr-2"></i>PDF 다운로드
                     </button>
-                    <button onclick="window.location.href='/'" class="flex-1 bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700">
+                    <button onclick="window.location.href='/'" class="flex-1 bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700 transition-colors">
                         <i class="fas fa-home mr-2"></i>홈으로
                     </button>
                 </div>
