@@ -1235,9 +1235,6 @@ app.get('/report/:id', (c) => {
                     <button onclick="downloadPDF()" class="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700">
                         <i class="fas fa-file-pdf mr-2"></i>PDF 다운로드
                     </button>
-                    <button onclick="window.print()" class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700">
-                        <i class="fas fa-print mr-2"></i>인쇄하기
-                    </button>
                     <button onclick="window.location.href='/'" class="flex-1 bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700">
                         <i class="fas fa-home mr-2"></i>홈으로
                     </button>

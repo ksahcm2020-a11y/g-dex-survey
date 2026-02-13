@@ -1,4 +1,4 @@
-// 산업일자리전환 컨설팅 사전진단 보고서 JavaScript
+// 산업일자리전환 준비도 진단 보고서 JavaScript
 // Updated: 2026-02-13
 
 async function loadReport() {
@@ -24,10 +24,10 @@ function renderReport(report) {
   
   const html = `
     <!-- 1. 표지 (Cover Page) -->
-    <div class="bg-gradient-to-br from-blue-900 to-blue-700 text-white rounded-lg p-8 mb-6 text-center page-break-after">
+    <div class="bg-gradient-to-br from-blue-900 to-blue-700 text-white rounded-lg p-4 mb-3 text-center page-break-after">
       <div class="mb-4">
-        <i class="fas fa-industry text-5xl mb-3"></i>
-        <h1 class="text-3xl font-bold mb-2">산업일자리전환 컨설팅 사전진단 보고서</h1>
+        <i class="fas fa-industry text-4xl mb-2"></i>
+        <h1 class="text-2xl font-bold mb-2">산업일자리전환 준비도 진단 보고서</h1>
       </div>
       
       <div class="bg-white/10 backdrop-blur rounded-lg p-4 max-w-2xl mx-auto">
@@ -46,8 +46,8 @@ function renderReport(report) {
     </div>
 
     <!-- 2. 종합 진단 결과 -->
-    <div class="bg-white border-4 rounded-lg p-4 mb-4" style="border-color: ${report.typeColor};">
-      <h2 class="text-lg font-bold text-gray-800 mb-6">
+    <div class="bg-white border-4 rounded-lg p-3 mb-2" style="border-color: ${report.typeColor};">
+      <h2 class="text-lg font-bold text-gray-800 mb-3">
         <i class="fas fa-clipboard-check mr-2"></i>
         종합 진단 결과
       </h2>
@@ -72,7 +72,7 @@ function renderReport(report) {
           G-DAX 4분면 위치 확인
         </h3>
         
-        <div class="relative" style="height: 350px;">
+        <div class="relative" style="height: 280px;">
           <canvas id="matrixChart"></canvas>
         </div>
         
@@ -103,14 +103,14 @@ function renderReport(report) {
     </div>
 
     <!-- 3. 상세 분석 및 이슈 도출 -->
-    <div class="bg-white border-2 border-gray-200 rounded-lg p-4 mb-4">
-      <h2 class="text-lg font-bold text-gray-800 mb-6">
+    <div class="bg-white border-2 border-gray-200 rounded-lg p-3 mb-2">
+      <h2 class="text-lg font-bold text-gray-800 mb-3">
         <i class="fas fa-search mr-2 text-blue-600"></i>
         상세 분석 및 이슈 도출
       </h2>
 
       <!-- 환경(Green) 리스크 분석 -->
-      <div class="mb-6 pb-6 border-b">
+      <div class="mb-3 pb-6 border-b">
         <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
           <i class="fas fa-leaf mr-2 text-green-600"></i>
           ① 환경(Green) 리스크 분석
@@ -132,7 +132,7 @@ function renderReport(report) {
       </div>
 
       <!-- 디지털(Digital) 역량 분석 -->
-      <div class="mb-6 pb-6 border-b">
+      <div class="mb-3 pb-6 border-b">
         <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
           <i class="fas fa-microchip mr-2 text-blue-600"></i>
           ② 디지털(Digital) 역량 분석
@@ -192,8 +192,8 @@ function renderReport(report) {
     </div>
 
     <!-- 4. 맞춤형 솔루션 처방 -->
-    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-4 mb-4">
-      <h2 class="text-lg font-bold text-gray-800 mb-6">
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-3 mb-2">
+      <h2 class="text-lg font-bold text-gray-800 mb-3">
         <i class="fas fa-prescription-bottle mr-2 text-blue-600"></i>
         맞춤형 솔루션 처방
       </h2>
@@ -515,19 +515,19 @@ async function downloadPDF() {
   buttons[0].innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>PDF 생성중...';
   
   try {
-    // PDF 생성 옵션 - 2페이지 최적화
+    // PDF 생성 옵션 - A4 2페이지 최적화
     const element = document.getElementById('reportContent');
     const opt = {
-      margin: [8, 8, 8, 8],  // 여백 축소 (상하좌우 8mm)
-      filename: `산업일자리전환_사전진단보고서_${surveyId}_${new Date().toISOString().split('T')[0]}.pdf`,
-      image: { type: 'jpeg', quality: 0.95 },
+      margin: [5, 5, 5, 5],  // 여백 최소화 (상하좌우 5mm)
+      filename: `산업일자리전환_준비도진단보고서_${surveyId}_${new Date().toISOString().split('T')[0]}.pdf`,
+      image: { type: 'jpeg', quality: 0.92 },
       html2canvas: { 
-        scale: 1.5,  // 해상도 조정 (2배에서 1.5배로 축소하여 파일 크기 최적화)
+        scale: 1.3,  // 해상도 조정하여 컨텐츠 압축
         useCORS: true,
         logging: false,
         letterRendering: true,
         allowTaint: true,
-        windowWidth: 1200,  // 렌더링 너비 고정
+        windowWidth: 1100,  // 렌더링 너비 축소
         scrollY: 0,
         scrollX: 0
       },
