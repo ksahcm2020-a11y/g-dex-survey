@@ -570,4 +570,3 @@ async function downloadPDF() {
     });
   }
 }
-}
