@@ -1,4 +1,5 @@
-// G-DAX 산업·일자리 전환 진단 리포트 JavaScript
+// 산업일자리전환 컨설팅 사전진단 보고서 JavaScript
+// Updated: 2026-02-13
 
 async function loadReport() {
   try {
